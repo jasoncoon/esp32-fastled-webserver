@@ -58,6 +58,9 @@ void setupWeb() {
     webServer.send(200, "text/json", newValue);
   });
   
+  webServer.serveStatic("/", SPIFFS, "/index.htm", "max-age=86400");
+  webServer.serveStatic("/index.htm", SPIFFS, "/index.htm", "max-age=86400");
+
   webServer.begin();
   Serial.println ( "HTTP server started" );
 }

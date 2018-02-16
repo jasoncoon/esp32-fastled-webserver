@@ -186,7 +186,7 @@ void setup() {
   Serial.begin(115200);
 
   SPIFFS.begin();
-//  listDir(SPIFFS, "/", 1);
+  listDir(SPIFFS, "/", 1);
 
   setupWifi();
   setupWeb();
