@@ -7,6 +7,7 @@ Control addressable LEDs with an ESP32 via a web browser over Wi-Fi.
 ### Currently Working:
 * [x] DemoReel100 patterns
 * [x] [Sam's multi-core support](https://github.com/samguyer/FastLED/blob/master/examples/DemoReelESP32/DemoReelESP32.ino)
+* [x] Static web app file serving from SPIFFS
 * [x] Ability to adjust these parameters via the HTTP REST API:
    * [x] power
    * [x] brightness
@@ -15,7 +16,6 @@ Control addressable LEDs with an ESP32 via a web browser over Wi-Fi.
    * [x] autoplay duration
 
 ### Currently Lacking:
-* [ ] Static web app file serving from SPIFFS
 * [ ] Setting storage in EEPROM
 * [ ] More patterns
 * [ ] More parameters
@@ -60,6 +60,7 @@ Recommended by [Adafruit NeoPixel "Best Practices"](https://learn.adafruit.com/a
 
 * [Arduino](https://www.arduino.cc/en/main/software)
 * [ESP32 Arduino Libraries & Tools](https://github.com/espressif/arduino-esp32)
+* [Arduino ESP32 filesystem uploader](https://github.com/me-no-dev/arduino-esp32fs-plugin)
 
 #### Libraries
 
@@ -71,8 +72,8 @@ Recommended by [Adafruit NeoPixel "Best Practices"](https://learn.adafruit.com/a
 
 To fix an [issue with serving files from SPIFFS over the web server](https://github.com/jasoncoon/esp32-fastled-webserver/issues/1), I used Yves BAZIN's fix here: https://github.com/hpwit/lib
 
-Copy `libspiffs.a` to the ESP32 tools directory:
+Copy [libspiffs.a](libspiffs.a) to the ESP32 tools directory:
 `\Documents\Arduino\hardware\espressif\esp32\tools\sdk\lib\libspiffs.a`
 
-And copy `esp32fs.jar` to the Arduino tools directory:
+And copy [esp32fs.jar](esp32fs.jar) to the Arduino tools directory:
 `\Documents\Arduino\tools\ESP32FS\tool\esp32fs.jar`
