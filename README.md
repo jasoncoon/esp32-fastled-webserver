@@ -23,7 +23,7 @@ Control addressable LEDs with an ESP32 via a web browser over Wi-Fi.
    * [ ] solid color
    * [ ] fire cooling/sparking
    * [ ] twinkle speed/density
-   
+
 ## Requirements
 
 ### Hardware
@@ -66,3 +66,13 @@ Recommended by [Adafruit NeoPixel "Best Practices"](https://learn.adafruit.com/a
 * [samguyer/FastLED](https://github.com/samguyer/FastLED)
 * [ESP32 Arduino Libraries & Tools](https://github.com/espressif/arduino-esp32)
 * [ESP8266/ESP32 WebServer](https://github.com/bbx10/WebServer_tng)
+
+#### SPIFFS fix
+
+To fix an [issue with serving files from SPIFFS over the web server](https://github.com/jasoncoon/esp32-fastled-webserver/issues/1), I used Yves BAZIN's fix here: https://github.com/hpwit/lib
+
+Copy `libspiffs.a` to the ESP32 tools directory:
+`\Documents\Arduino\hardware\espressif\esp32\tools\sdk\lib\libspiffs.a`
+
+And copy `esp32fs.jar` to the Arduino tools directory:
+`\Documents\Arduino\tools\ESP32FS\tool\esp32fs.jar`

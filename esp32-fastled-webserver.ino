@@ -180,7 +180,7 @@ void listDir(fs::FS &fs, const char * dirname, uint8_t levels) {
 
 void setup() {
   pinMode(led, OUTPUT);
-  digitalWrite(led, 0);
+  digitalWrite(led, 1);
 
   //  delay(3000); // 3 second delay for recovery
   Serial.begin(115200);
