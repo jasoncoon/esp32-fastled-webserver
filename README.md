@@ -16,12 +16,12 @@ Control addressable LEDs with an ESP32 via a web browser over Wi-Fi.
    * [x] autoplay duration
    * [x] speed
    * [x] palette
+   * [x] solid color
 
 ### Currently Lacking:
 * [ ] Setting storage in EEPROM
 * [ ] More patterns
 * [ ] More parameters
-   * [ ] solid color
    * [ ] fire cooling/sparking
    * [ ] twinkle speed/density
 
