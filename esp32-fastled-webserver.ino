@@ -49,6 +49,8 @@ uint8_t brightness = 64;
 
 uint8_t speed = 30;
 
+CRGB solidColor = CRGB::Blue;
+
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
 #define DATA_PIN    12

@@ -407,7 +407,7 @@ function postValue(name, value) {
 
   var body = { name: name, value: value };
 
-  $.post(urlBase + "fieldValue?" + name + "=" + value, body, function(data) {
+  $.post(urlBase + "fieldValue?name=" + name + "&value=" + value, body, function(data) {
     if (data.name != null) {
       $("#status").html("Set " + name + ": " + data.name);
     } else {
@@ -428,7 +428,7 @@ function postColor(name, value) {
 
   var body = { name: name, r: value.r, g: value.g, b: value.b };
 
-  $.post(urlBase + name + "?r=" + value.r + "&g=" + value.g + "&b=" + value.b, body, function(data) {
+  $.post(urlBase + "fieldValue?name=" + name + "&value=" + "&r=" + value.r + "&g=" + value.g + "&b=" + value.b, body, function(data) {
     $("#status").html("Set " + name + ": " + data);
   })
   .fail(function(textStatus, errorThrown) { $("#status").html("Fail: " + textStatus + " " + errorThrown); });

@@ -48,10 +48,23 @@ String getPattern() {
   return String(currentPatternIndex);
 }
 
+void setPattern(uint8_t value)
+{
+  if (value >= patternCount)
+    value = patternCount - 1;
+
+  currentPatternIndex = value;
+
+//  if (autoplay == 0) {
+//    EEPROM.write(1, currentPatternIndex);
+//    EEPROM.commit();
+//  }
+
+//  broadcastInt("pattern", currentPatternIndex);
+}
+
 String setPattern(String value) {
-  currentPatternIndex = value.toInt();
-  if (currentPatternIndex < 0) currentPatternIndex = 0;
-  else if (currentPatternIndex >= patternCount) currentPatternIndex = patternCount - 1;
+  setPattern(value.toInt());
   return String(currentPatternIndex);
 }
 
@@ -122,6 +135,37 @@ String setAutoplayDuration(String value) {
   return String(autoplayDuration);
 }
 
+String getSolidColor() {
+  return String(solidColor.r) + "," + String(solidColor.g) + "," + String(solidColor.b);
+}
+
+void setSolidColor(uint8_t r, uint8_t g, uint8_t b)
+{
+  solidColor = CRGB(r, g, b);
+
+  //  EEPROM.write(2, r);
+  //  EEPROM.write(3, g);
+  //  EEPROM.write(4, b);
+  //  EEPROM.commit();
+
+  setPattern(patternCount - 1);
+
+  //  broadcastString("color", String(solidColor.r) + "," + String(solidColor.g) + "," + String(solidColor.b));
+}
+
+void setSolidColor(CRGB color)
+{
+  setSolidColor(color.r, color.g, color.b);
+}
+
+String setSolidColor(String value) {
+  String r = webServer.arg("r");
+  String g = webServer.arg("g");
+  String b = webServer.arg("b");
+  setSolidColor(r.toInt(), g.toInt(), b.toInt());
+  return String(solidColor.r) + "," + String(solidColor.g) + "," + String(solidColor.b);
+}
+
 FieldList fields = {
   { "power", "Power", BooleanFieldType, 0, 1, getPower, NULL, setPower },
   { "brightness", "Brightness", NumberFieldType, 1, 255, getBrightness, NULL, setBrightness },
@@ -131,6 +175,8 @@ FieldList fields = {
   { "autoplaySection", "Autoplay", SectionFieldType },
   { "autoplay", "Autoplay", BooleanFieldType, 0, 1, getAutoplay, NULL, setAutoplay },
   { "autoplayDuration", "Autoplay Duration", NumberFieldType, 0, 255, getAutoplayDuration, NULL, setAutoplayDuration },
+  { "solidColorSection", "Solid Color", SectionFieldType },
+  { "solidColor", "Color", ColorFieldType, 0, 255, getSolidColor, NULL, setSolidColor },
 };
 
 uint8_t fieldCount = ARRAY_SIZE(fields);
