@@ -55,12 +55,12 @@ void setPattern(uint8_t value)
 
   currentPatternIndex = value;
 
-//  if (autoplay == 0) {
-//    EEPROM.write(1, currentPatternIndex);
-//    EEPROM.commit();
-//  }
+  //  if (autoplay == 0) {
+  //    EEPROM.write(1, currentPatternIndex);
+  //    EEPROM.commit();
+  //  }
 
-//  broadcastInt("pattern", currentPatternIndex);
+  //  broadcastInt("pattern", currentPatternIndex);
 }
 
 String setPattern(String value) {
@@ -166,6 +166,32 @@ String setSolidColor(String value) {
   return String(solidColor.r) + "," + String(solidColor.g) + "," + String(solidColor.b);
 }
 
+String getTwinkleSpeed() {
+  return String(twinkleSpeed);
+}
+
+String setTwinkleSpeed(String value) {
+  twinkleSpeed = value.toInt();
+  if (twinkleSpeed < 0) twinkleSpeed = 0;
+  else if (twinkleSpeed > 8) twinkleSpeed = 8;
+  //  broadcastInt("twinkleSpeed", twinkleSpeed);
+  //  sendInt(twinkleSpeed);
+  return String(twinkleSpeed);
+}
+
+String getTwinkleDensity() {
+  return String(twinkleDensity);
+}
+
+String setTwinkleDensity(String value) {
+  twinkleDensity = value.toInt();
+  if (twinkleDensity < 0) twinkleDensity = 0;
+  else if (twinkleDensity > 8) twinkleDensity = 8;
+  //  broadcastInt("twinkleDensity", twinkleDensity);
+  //  sendInt(twinkleDensity);
+  return String(twinkleDensity);
+}
+
 FieldList fields = {
   { "power", "Power", BooleanFieldType, 0, 1, getPower, NULL, setPower },
   { "brightness", "Brightness", NumberFieldType, 1, 255, getBrightness, NULL, setBrightness },
@@ -177,6 +203,9 @@ FieldList fields = {
   { "autoplayDuration", "Autoplay Duration", NumberFieldType, 0, 255, getAutoplayDuration, NULL, setAutoplayDuration },
   { "solidColorSection", "Solid Color", SectionFieldType },
   { "solidColor", "Color", ColorFieldType, 0, 255, getSolidColor, NULL, setSolidColor },
+  { "twinklesSection", "Twinkles", SectionFieldType },
+  { "twinkleSpeed", "Twinkle Speed", NumberFieldType, 0, 8, getTwinkleSpeed, NULL, setTwinkleSpeed },
+  { "twinkleDensity", "Twinkle Density", NumberFieldType, 0, 8, getTwinkleDensity, NULL, setTwinkleDensity },
 };
 
 uint8_t fieldCount = ARRAY_SIZE(fields);

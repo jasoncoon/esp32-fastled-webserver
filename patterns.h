@@ -21,29 +21,9 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-const CRGBPalette16 palettes[] = {
-  RainbowColors_p,
-  RainbowStripeColors_p,
-  CloudColors_p,
-  LavaColors_p,
-  OceanColors_p,
-  ForestColors_p,
-  PartyColors_p,
-  HeatColors_p
-};
 
-const uint8_t paletteCount = ARRAY_SIZE(palettes);
-
-const String paletteNames[paletteCount] = {
-  "Rainbow",
-  "Rainbow Stripe",
-  "Cloud",
-  "Lava",
-  "Ocean",
-  "Forest",
-  "Party",
-  "Heat",
-};
+#include "palettes.h";
+#include "twinkleFOX.h"
 
 void rainbow()
 {
@@ -122,6 +102,24 @@ typedef struct {
 typedef PatternAndName PatternAndNameList[];
 
 PatternAndNameList patterns = {
+  // TwinkleFOX patterns
+  { drawTwinkles, "Twinkles" },
+  //  { retroC9Twinkles,        "Retro C9 Twinkles" },
+  //  { redWhiteTwinkles,       "Red & White Twinkles" },
+  //  { blueWhiteTwinkles,      "Blue & White Twinkles" },
+  //  { redGreenWhiteTwinkles,  "Red, Green & White Twinkles" },
+  //  { fairyLightTwinkles,     "Fairy Light Twinkles" },
+  //  { snow2Twinkles,          "Snow 2 Twinkles" },
+  //  { hollyTwinkles,          "Holly Twinkles" },
+  //  { iceTwinkles,            "Ice Twinkles" },
+  //  { partyTwinkles,          "Party Twinkles" },
+  //  { forestTwinkles,         "Forest Twinkles" },
+  //  { lavaTwinkles,           "Lava Twinkles" },
+  //  { fireTwinkles,           "Fire Twinkles" },
+  //  { cloud2Twinkles,         "Cloud 2 Twinkles" },
+  //  { oceanTwinkles,          "Ocean Twinkles" },
+
+  // DemoReel100 patterns
   { rainbow, "rainbow" },
   { rainbowWithGlitter, "rainbowWithGlitter" },
   { confetti, "confetti" },
