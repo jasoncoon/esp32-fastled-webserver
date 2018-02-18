@@ -38,8 +38,8 @@ String getBrightness() {
 
 String setBrightness(String value) {
   brightness = value.toInt();
-  if (brightness < 0) brightness = 0;
-  else if (brightness > 255) brightness = 255;
+  //  if (brightness < 0) brightness = 0;
+  //  else if (brightness > 255) brightness = 255;
   FastLED.setBrightness(brightness);
   return String(brightness);
 }
@@ -65,6 +65,38 @@ String getPatterns() {
   }
 
   return json;
+}
+
+String getPalette() {
+  return String(currentPaletteIndex);
+}
+
+String setPalette(String value) {
+  currentPaletteIndex = value.toInt();
+  if (currentPaletteIndex < 0) currentPaletteIndex = 0;
+  else if (currentPaletteIndex >= paletteCount) currentPaletteIndex = paletteCount - 1;
+  return String(currentPaletteIndex);
+}
+
+String getPalettes() {
+  String json = "";
+
+  for (uint8_t i = 0; i < paletteCount; i++) {
+    json += "\"" + paletteNames[i] + "\"";
+    if (i < paletteCount - 1)
+      json += ",";
+  }
+
+  return json;
+}
+
+String getSpeed() {
+  return String(speed);
+}
+
+String setSpeed(String value) {
+  speed = value.toInt();
+  return String(speed);
 }
 
 String getAutoplay() {
@@ -94,6 +126,8 @@ FieldList fields = {
   { "power", "Power", BooleanFieldType, 0, 1, getPower, NULL, setPower },
   { "brightness", "Brightness", NumberFieldType, 1, 255, getBrightness, NULL, setBrightness },
   { "pattern", "Pattern", SelectFieldType, 0, patternCount, getPattern, getPatterns, setPattern },
+  { "palette", "Palette", SelectFieldType, 0, paletteCount, getPalette, getPalettes, setPalette },
+  { "speed", "Speed", NumberFieldType, 1, 255, getSpeed, NULL, setSpeed },
   { "autoplaySection", "Autoplay", SectionFieldType },
   { "autoplay", "Autoplay", BooleanFieldType, 0, 1, getAutoplay, NULL, setAutoplay },
   { "autoplayDuration", "Autoplay Duration", NumberFieldType, 0, 255, getAutoplayDuration, NULL, setAutoplayDuration },

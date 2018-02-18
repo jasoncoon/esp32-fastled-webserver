@@ -28,6 +28,10 @@
 #include <FS.h>
 #include <SPIFFS.h>
 
+#if defined(FASTLED_VERSION) && (FASTLED_VERSION < 3001008)
+#warning "Requires FastLED 3.1.8 or later; check github for latest code."
+#endif
+
 WebServer webServer(80);
 
 const int led = 5;
@@ -37,52 +41,15 @@ uint8_t autoplayDuration = 10;
 unsigned long autoPlayTimeout = 0;
 
 uint8_t currentPatternIndex = 0; // Index number of which pattern is current
+uint8_t currentPaletteIndex = 0;
 uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 
-const uint8_t brightnessCount = 5;
-uint8_t brightnessMap[brightnessCount] = { 16, 32, 64, 128, 255 };
-uint8_t brightnessIndex = 0;
 uint8_t power = 1;
-uint8_t brightness = brightnessMap[brightnessIndex];
+uint8_t brightness = 64;
+
+uint8_t speed = 30;
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
-
-typedef void (*Pattern)();
-typedef Pattern PatternList[];
-typedef struct {
-  Pattern pattern;
-  String name;
-} PatternAndName;
-typedef PatternAndName PatternAndNameList[];
-
-void rainbow();
-void rainbowWithGlitter();
-void confetti();
-void sinelon();
-void juggle();
-void bpm();
-
-PatternAndNameList patterns = {
-  { rainbow, "rainbow" },
-  { rainbowWithGlitter, "rainbowWithGlitter" },
-  { confetti, "confetti" },
-  { sinelon, "sinelon" },
-  { juggle, "juggle" },
-  { bpm, "bpm" },
-};
-
-const uint8_t patternCount = ARRAY_SIZE(patterns);
-
-#include "field.h"
-#include "fields.h"
-
-#include "secrets.h"
-#include "wifi.h"
-#include "web.h"
-
-#if defined(FASTLED_VERSION) && (FASTLED_VERSION < 3001008)
-#warning "Requires FastLED 3.1.8 or later; check github for latest code."
-#endif
 
 #define DATA_PIN    12
 //#define CLK_PIN   4
@@ -91,11 +58,19 @@ const uint8_t patternCount = ARRAY_SIZE(patterns);
 #define NUM_LEDS    14
 CRGB leds[NUM_LEDS];
 
-#define BRIGHTNESS          60
 #define FRAMES_PER_SECOND  120
 
 // -- The core to run FastLED.show()
 #define FASTLED_SHOW_CORE 0
+
+#include "patterns.h"
+
+#include "field.h"
+#include "fields.h"
+
+#include "secrets.h"
+#include "wifi.h"
+#include "web.h"
 
 // wifi ssid and password should be added to a file in the sketch named secrets.h
 // the secrets.h file should be added to the .gitignore file and never committed or
@@ -196,7 +171,7 @@ void setup() {
   //FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
 
   // set master brightness control
-  FastLED.setBrightness(BRIGHTNESS);
+  FastLED.setBrightness(brightness);
 
   int core = xPortGetCoreID();
   Serial.print("Main code running on core ");
@@ -244,60 +219,5 @@ void nextPattern()
   currentPatternIndex = (currentPatternIndex + 1) % ARRAY_SIZE( patterns);
 }
 
-void rainbow()
-{
-  // FastLED's built-in rainbow generator
-  fill_rainbow( leds, NUM_LEDS, gHue, 7);
-}
 
-void rainbowWithGlitter()
-{
-  // built-in FastLED rainbow, plus some random sparkly glitter
-  rainbow();
-  addGlitter(80);
-}
-
-void addGlitter( fract8 chanceOfGlitter)
-{
-  if ( random8() < chanceOfGlitter) {
-    leds[ random16(NUM_LEDS) ] += CRGB::White;
-  }
-}
-
-void confetti()
-{
-  // random colored speckles that blink in and fade smoothly
-  fadeToBlackBy( leds, NUM_LEDS, 10);
-  int pos = random16(NUM_LEDS);
-  leds[pos] += CHSV( gHue + random8(64), 200, 255);
-}
-
-void sinelon()
-{
-  // a colored dot sweeping back and forth, with fading trails
-  fadeToBlackBy( leds, NUM_LEDS, 20);
-  int pos = beatsin16( 13, 0, NUM_LEDS - 1 );
-  leds[pos] += CHSV( gHue, 255, 192);
-}
-
-void bpm()
-{
-  // colored stripes pulsing at a defined Beats-Per-Minute (BPM)
-  uint8_t BeatsPerMinute = 62;
-  CRGBPalette16 palette = PartyColors_p;
-  uint8_t beat = beatsin8( BeatsPerMinute, 64, 255);
-  for ( int i = 0; i < NUM_LEDS; i++) { //9948
-    leds[i] = ColorFromPalette(palette, gHue + (i * 2), beat - gHue + (i * 10));
-  }
-}
-
-void juggle() {
-  // eight colored dots, weaving in and out of sync with each other
-  fadeToBlackBy( leds, NUM_LEDS, 20);
-  byte dothue = 0;
-  for ( int i = 0; i < 8; i++) {
-    leds[beatsin16( i + 7, 0, NUM_LEDS - 1 )] |= CHSV(dothue, 200, 255);
-    dothue += 32;
-  }
-}
 
