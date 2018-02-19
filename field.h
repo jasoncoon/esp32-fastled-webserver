@@ -32,14 +32,15 @@ const String ColorFieldType = "Color";
 const String SectionFieldType = "Section";
 
 typedef struct Field {
-  String name;
-  String label;
-  String type;
-  uint8_t min;
-  uint8_t max;
-  FieldGetter getValue;
-  FieldGetter getOptions;
-  FieldSetter setValue;
+  public:
+    String name;
+    String label;
+    String type;
+    uint8_t min;
+    uint8_t max;
+    FieldGetter getValue;
+    FieldGetter getOptions;
+    FieldSetter setValue;
 };
 
 typedef Field FieldList[];
@@ -62,12 +63,110 @@ String getFieldValue(String name, FieldList fields, uint8_t count) {
   return String();
 }
 
+CRGB parseColor(String value) {  
+  uint8_t ri = value.indexOf(",");
+  uint8_t gi = value.indexOf(",", ri + 1);
+
+  String rs = value.substring(0, ri);
+  String gs = value.substring(ri + 1, gi);
+  String bs = value.substring(gi + 1);
+
+  uint8_t r = rs.toInt();
+  uint8_t g = gs.toInt();
+  uint8_t b = bs.toInt();
+
+  return CRGB(r, g, b);
+}
+
+void writeFieldsToEEPROM(FieldList fields, uint8_t count) {
+  uint8_t index = 0;
+
+  EEPROM.write(index, 0);
+
+  for (uint8_t i = 0; i < count; i++) {
+    Field field = fields[i];
+    if (!field.getValue && !field.setValue)
+      continue;
+
+    String value = field.getValue();
+
+    if (field.type == ColorFieldType) {
+      CRGB color = parseColor(value);
+      EEPROM.write(index++, color.r);
+      EEPROM.write(index++, color.g);
+      EEPROM.write(index++, color.b);
+    } else {
+      byte v = value.toInt();
+      EEPROM.write(index++, v);
+    }
+  }
+
+  EEPROM.commit();
+}
+
 String setFieldValue(String name, String value, FieldList fields, uint8_t count) {
+  String result;
+
   Field field = getField(name, fields, count);
   if (field.setValue) {
-    return field.setValue(value);
+    if (field.type == ColorFieldType) {
+      String r = webServer.arg("r");
+      String g = webServer.arg("g");
+      String b = webServer.arg("b");
+      String combinedValue = r + "," + g + "," + b;
+      result = field.setValue(combinedValue);
+    } else {
+      result = field.setValue(value);
+    }
   }
-  return String();
+
+  writeFieldsToEEPROM(fields, count);
+
+  return result;
+}
+
+void loadFieldsFromEEPROM(FieldList fields, uint8_t count) {
+  uint8_t byteCount = 1;
+
+  for (uint8_t i = 0; i < count; i++) {
+    Field field = fields[i];
+    if (!field.setValue)
+      continue;
+
+    if (field.type == ColorFieldType) {
+      byteCount += 3;
+    } else {
+      byteCount++;
+    }
+  }
+
+  if (!EEPROM.begin(count)) {
+    Serial.println("Failed to initialize EEPROM!");
+    return;
+  }
+
+  if (EEPROM.read(0) == 255) {
+    Serial.println("First run, or EEPROM erased, skipping settings load!");
+    return;
+  }
+
+  uint8_t index = 0;
+
+  for (uint8_t i = 0; i < count; i++) {
+    Field field = fields[i];
+    if (!field.setValue)
+      continue;
+
+    if (field.type == ColorFieldType) {
+      String r = String(EEPROM.read(index++));
+      String g = String(EEPROM.read(index++));
+      String b = String(EEPROM.read(index++));
+      field.setValue(r + "," + g + "," + b);
+    } else {
+      byte v = EEPROM.read(index++);
+      field.setValue(String(v));
+    }
+  }
 }
 
 String getFieldsJson(FieldList fields, uint8_t count) {
@@ -78,7 +177,7 @@ String getFieldsJson(FieldList fields, uint8_t count) {
 
     json += "{\"name\":\"" + field.name + "\",\"label\":\"" + field.label + "\",\"type\":\"" + field.type + "\"";
 
-    if(field.getValue) {
+    if (field.getValue) {
       if (field.type == ColorFieldType || field.type == "String") {
         json += ",\"value\":\"" + field.getValue() + "\"";
       }
@@ -109,28 +208,3 @@ String getFieldsJson(FieldList fields, uint8_t count) {
   return json;
 }
 
-/*
-  String json = "[";
-
-  json += "{\"name\":\"power\",\"label\":\"Power\",\"type\":\"Boolean\",\"value\":" + String(power) + "},";
-  json += "{\"name\":\"brightness\",\"label\":\"Brightness\",\"type\":\"Number\",\"value\":" + String(brightness) + "},";
-
-  json += "{\"name\":\"pattern\",\"label\":\"Pattern\",\"type\":\"Select\",\"value\":" + String(currentPatternIndex) + ",\"options\":[";
-  for (uint8_t i = 0; i < patternCount; i++)
-  {
-    json += "\"" + patterns[i].name + "\"";
-    if (i < patternCount - 1)
-      json += ",";
-  }
-  json += "]},";
-
-  json += "{\"name\":\"autoplay\",\"label\":\"Autoplay\",\"type\":\"Boolean\",\"value\":" + String(autoplay) + "},";
-  json += "{\"name\":\"autoplayDuration\",\"label\":\"Autoplay Duration\",\"type\":\"Number\",\"value\":" + String(autoplayDuration) + "},";
-
-  json += "{\"name\":\"solidColor\",\"label\":\"Color\",\"type\":\"Color\",\"value\":\"" + String(solidColor.r) + "," + String(solidColor.g) + "," + String(solidColor.b) +"\"},";
-
-  json += "{\"name\":\"cooling\",\"label\":\"Cooling\",\"type\":\"Number\",\"value\":" + String(cooling) + "},";
-  json += "{\"name\":\"sparking\",\"label\":\"Sparking\",\"type\":\"Number\",\"value\":" + String(sparking) + "}";
-
-  json += "]";
-*/

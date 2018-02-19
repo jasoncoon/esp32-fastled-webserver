@@ -38,8 +38,6 @@ String getBrightness() {
 
 String setBrightness(String value) {
   brightness = value.toInt();
-  //  if (brightness < 0) brightness = 0;
-  //  else if (brightness > 255) brightness = 255;
   FastLED.setBrightness(brightness);
   return String(brightness);
 }
@@ -54,13 +52,6 @@ void setPattern(uint8_t value)
     value = patternCount - 1;
 
   currentPatternIndex = value;
-
-  //  if (autoplay == 0) {
-  //    EEPROM.write(1, currentPatternIndex);
-  //    EEPROM.commit();
-  //  }
-
-  //  broadcastInt("pattern", currentPatternIndex);
 }
 
 String setPattern(String value) {
@@ -163,31 +154,21 @@ String getSolidColor() {
   return String(solidColor.r) + "," + String(solidColor.g) + "," + String(solidColor.b);
 }
 
-void setSolidColor(uint8_t r, uint8_t g, uint8_t b)
+String setSolidColor(uint8_t r, uint8_t g, uint8_t b)
 {
   solidColor = CRGB(r, g, b);
 
-  //  EEPROM.write(2, r);
-  //  EEPROM.write(3, g);
-  //  EEPROM.write(4, b);
-  //  EEPROM.commit();
-
-  setPattern(patternCount - 1);
-
-  //  broadcastString("color", String(solidColor.r) + "," + String(solidColor.g) + "," + String(solidColor.b));
+  return String(solidColor.r) + "," + String(solidColor.g) + "," + String(solidColor.b);
 }
 
-void setSolidColor(CRGB color)
-{
-  setSolidColor(color.r, color.g, color.b);
+String setSolidColor(CRGB color) {
+  return setSolidColor(color.r, color.g, color.b);
 }
 
 String setSolidColor(String value) {
-  String r = webServer.arg("r");
-  String g = webServer.arg("g");
-  String b = webServer.arg("b");
-  setSolidColor(r.toInt(), g.toInt(), b.toInt());
-  return String(solidColor.r) + "," + String(solidColor.g) + "," + String(solidColor.b);
+  CRGB color = parseColor(value);
+  
+  return setSolidColor(color);
 }
 
 String getCooling() {
@@ -216,8 +197,6 @@ String setTwinkleSpeed(String value) {
   twinkleSpeed = value.toInt();
   if (twinkleSpeed < 0) twinkleSpeed = 0;
   else if (twinkleSpeed > 8) twinkleSpeed = 8;
-  //  broadcastInt("twinkleSpeed", twinkleSpeed);
-  //  sendInt(twinkleSpeed);
   return String(twinkleSpeed);
 }
 
@@ -229,8 +208,6 @@ String setTwinkleDensity(String value) {
   twinkleDensity = value.toInt();
   if (twinkleDensity < 0) twinkleDensity = 0;
   else if (twinkleDensity > 8) twinkleDensity = 8;
-  //  broadcastInt("twinkleDensity", twinkleDensity);
-  //  sendInt(twinkleDensity);
   return String(twinkleDensity);
 }
 

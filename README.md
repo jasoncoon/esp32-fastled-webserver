@@ -8,7 +8,7 @@ Control addressable LEDs with an ESP32 via a web browser over Wi-Fi.
 * [x] DemoReel100 patterns
 * [x] [Sam's multi-core support](https://github.com/samguyer/FastLED/blob/master/examples/DemoReelESP32/DemoReelESP32.ino)
 * [x] Static web app file serving from SPIFFS
-* [x] Ability to adjust these parameters via the HTTP REST API:
+* [x] Ability to adjust these settings via the HTTP REST API:
    * [x] power on/off
    * [x] brightness
    * [x] pattern
@@ -21,10 +21,10 @@ Control addressable LEDs with an ESP32 via a web browser over Wi-Fi.
    * [x] solid color
    * [x] twinkle speed/density
    * [x] fire cooling/sparking
+* [x] Setting storage in EEPROM
 
 ### Currently Lacking:
-* [ ] Setting storage in EEPROM
-* [ ] More patterns
+* [ ] WebSockets for automatically refreshing/syncing web clients
 
 ## Requirements
 

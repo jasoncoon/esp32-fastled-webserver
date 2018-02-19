@@ -27,6 +27,7 @@
 #include <ESP8266WebServer.h>
 #include <FS.h>
 #include <SPIFFS.h>
+#include <EEPROM.h>
 
 #if defined(FASTLED_VERSION) && (FASTLED_VERSION < 3001008)
 #warning "Requires FastLED 3.1.8 or later; check github for latest code."
@@ -179,6 +180,8 @@ void setup() {
 
   SPIFFS.begin();
   listDir(SPIFFS, "/", 1);
+
+  loadFieldsFromEEPROM(fields, fieldCount);
 
   setupWifi();
   setupWeb();
