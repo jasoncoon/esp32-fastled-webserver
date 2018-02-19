@@ -88,6 +88,7 @@ String setPalette(String value) {
   currentPaletteIndex = value.toInt();
   if (currentPaletteIndex < 0) currentPaletteIndex = 0;
   else if (currentPaletteIndex >= paletteCount) currentPaletteIndex = paletteCount - 1;
+  targetPalette = palettes[currentPaletteIndex];
   return String(currentPaletteIndex);
 }
 
@@ -129,10 +130,33 @@ String getAutoplayDuration() {
 
 String setAutoplayDuration(String value) {
   autoplayDuration = value.toInt();
-  if (autoplayDuration < 0) autoplayDuration = 0;
+  if (autoplayDuration < 1) autoplayDuration = 1;
   else if (autoplayDuration > 255) autoplayDuration = 255;
   autoPlayTimeout = millis() + (autoplayDuration * 1000);
   return String(autoplayDuration);
+}
+
+String getCyclePalettes() {
+  return String(cyclePalettes);
+}
+
+String setCyclePalettes(String value) {
+  cyclePalettes = value.toInt();
+  cyclePalettes = cyclePalettes == 0 ? 0 : 1;
+  paletteTimeout = millis() + (paletteDuration * 1000);
+  return String(cyclePalettes);
+}
+
+String getPaletteDuration() {
+  return String(paletteDuration);
+}
+
+String setPaletteDuration(String value) {
+  paletteDuration = value.toInt();
+  if (paletteDuration < 1) paletteDuration = 1;
+  else if (paletteDuration > 255) paletteDuration = 255;
+  paletteTimeout = millis() + (paletteDuration * 1000);
+  return String(paletteDuration);
 }
 
 String getSolidColor() {
@@ -166,6 +190,24 @@ String setSolidColor(String value) {
   return String(solidColor.r) + "," + String(solidColor.g) + "," + String(solidColor.b);
 }
 
+String getCooling() {
+  return String(cooling);
+}
+
+String setCooling(String value) {
+  cooling = value.toInt();
+  return String(cooling);
+}
+
+String getSparking() {
+  return String(sparking);
+}
+
+String setSparking(String value) {
+  sparking = value.toInt();
+  return String(sparking);
+}
+
 String getTwinkleSpeed() {
   return String(twinkleSpeed);
 }
@@ -195,14 +237,25 @@ String setTwinkleDensity(String value) {
 FieldList fields = {
   { "power", "Power", BooleanFieldType, 0, 1, getPower, NULL, setPower },
   { "brightness", "Brightness", NumberFieldType, 1, 255, getBrightness, NULL, setBrightness },
-  { "pattern", "Pattern", SelectFieldType, 0, patternCount, getPattern, getPatterns, setPattern },
-  { "palette", "Palette", SelectFieldType, 0, paletteCount, getPalette, getPalettes, setPalette },
   { "speed", "Speed", NumberFieldType, 1, 255, getSpeed, NULL, setSpeed },
-  { "autoplaySection", "Autoplay", SectionFieldType },
-  { "autoplay", "Autoplay", BooleanFieldType, 0, 1, getAutoplay, NULL, setAutoplay },
-  { "autoplayDuration", "Autoplay Duration", NumberFieldType, 0, 255, getAutoplayDuration, NULL, setAutoplayDuration },
+  
+  { "patternSection", "Pattern", SectionFieldType },
+  { "pattern", "Pattern", SelectFieldType, 0, patternCount, getPattern, getPatterns, setPattern },
+  { "autoplay", "Cycle Patterns", BooleanFieldType, 0, 1, getAutoplay, NULL, setAutoplay },
+  { "autoplayDuration", "Pattern Duration", NumberFieldType, 1, 255, getAutoplayDuration, NULL, setAutoplayDuration },
+  
+  { "paletteSection", "Palette", SectionFieldType },
+  { "palette", "Palette", SelectFieldType, 0, paletteCount, getPalette, getPalettes, setPalette },
+  { "cyclePalettes", "Cycle Palettes", BooleanFieldType, 0, 1, getCyclePalettes, NULL, setCyclePalettes },
+  { "paletteDuration", "Palette Duration", NumberFieldType, 1, 255, getPaletteDuration, NULL, setPaletteDuration },
+  
   { "solidColorSection", "Solid Color", SectionFieldType },
   { "solidColor", "Color", ColorFieldType, 0, 255, getSolidColor, NULL, setSolidColor },
+  
+  { "fire", "Fire & Water", SectionFieldType },
+  { "cooling", "Cooling", NumberFieldType, 0, 255, getCooling, NULL, setCooling },
+  { "sparking", "Sparking", NumberFieldType, 0, 255, getSparking, NULL, setSparking },
+  
   { "twinklesSection", "Twinkles", SectionFieldType },
   { "twinkleSpeed", "Twinkle Speed", NumberFieldType, 0, 8, getTwinkleSpeed, NULL, setTwinkleSpeed },
   { "twinkleDensity", "Twinkle Density", NumberFieldType, 0, 8, getTwinkleDensity, NULL, setTwinkleDensity },

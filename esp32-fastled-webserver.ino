@@ -41,7 +41,7 @@ uint8_t autoplayDuration = 10;
 unsigned long autoPlayTimeout = 0;
 
 uint8_t currentPatternIndex = 0; // Index number of which pattern is current
-uint8_t currentPaletteIndex = 0;
+
 uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 
 uint8_t power = 1;
@@ -49,7 +49,22 @@ uint8_t brightness = 64;
 
 uint8_t speed = 30;
 
+// COOLING: How much does the air cool as it rises?
+// Less cooling = taller flames.  More cooling = shorter flames.
+// Default 50, suggested range 20-100
+uint8_t cooling = 50;
+
+// SPARKING: What chance (out of 255) is there that a new spark will be lit?
+// Higher chance = more roaring fire.  Lower chance = more flickery fire.
+// Default 120, suggested range 50-200.
+uint8_t sparking = 120;
+
 CRGB solidColor = CRGB::Blue;
+
+uint8_t cyclePalettes = 0;
+uint8_t paletteDuration = 10;
+uint8_t currentPaletteIndex = 0;
+unsigned long paletteTimeout = 0;
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
@@ -57,7 +72,7 @@ CRGB solidColor = CRGB::Blue;
 //#define CLK_PIN   4
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
-#define NUM_LEDS    14
+#define NUM_LEDS    4 * 14
 CRGB leds[NUM_LEDS];
 
 #define FRAMES_PER_SECOND  120
@@ -181,7 +196,7 @@ void setup() {
 
   // -- Create the FastLED show task
   xTaskCreatePinnedToCore(FastLEDshowTask, "FastLEDshowTask", 2048, NULL, 2, &FastLEDshowTaskHandle, FASTLED_SHOW_CORE);
-  
+
   autoPlayTimeout = millis() + (autoplayDuration * 1000);
 }
 
@@ -197,13 +212,20 @@ void loop()
     patterns[currentPatternIndex].pattern();
 
     // do some periodic updates
-    EVERY_N_MILLISECONDS( 20 ) {
+    EVERY_N_MILLISECONDS(40) {
+      // slowly blend the current palette to the next
+      nblendPaletteTowardPalette(currentPalette, targetPalette, 8);
       gHue++;  // slowly cycle the "base color" through the rainbow
     }
 
     if (autoplay == 1 && (millis() > autoPlayTimeout)) {
       nextPattern();
       autoPlayTimeout = millis() + (autoplayDuration * 1000);
+    }
+
+    if (cyclePalettes == 1 && (millis() > paletteTimeout)) {
+      nextPalette();
+      paletteTimeout = millis() + (paletteDuration * 1000);
     }
   }
 
@@ -218,8 +240,13 @@ void loop()
 void nextPattern()
 {
   // add one to the current pattern number, and wrap around at the end
-  currentPatternIndex = (currentPatternIndex + 1) % ARRAY_SIZE( patterns);
+  currentPatternIndex = (currentPatternIndex + 1) % patternCount;
 }
 
+void nextPalette()
+{
+  currentPaletteIndex = (currentPaletteIndex + 1) % paletteCount;
+  targetPalette = palettes[currentPaletteIndex];
+}
 
 
