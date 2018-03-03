@@ -158,7 +158,7 @@ String setSolidColor(uint8_t r, uint8_t g, uint8_t b)
 {
   solidColor = CRGB(r, g, b);
 
-  return String(solidColor.r) + "," + String(solidColor.g) + "," + String(solidColor.b);
+  return "\"" + String(solidColor.r) + "," + String(solidColor.g) + "," + String(solidColor.b) + "\"";
 }
 
 String setSolidColor(CRGB color) {

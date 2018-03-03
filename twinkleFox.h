@@ -194,7 +194,7 @@ void drawTwinkles()
 
   uint8_t backgroundBrightness = bg.getAverageLight();
 
-  for(uint8_t i = 0; i < NUM_LEDS; i++) {
+  for(uint16_t i = 0; i < NUM_LEDS; i++) {
     CRGB& pixel = leds[i];
 
     PRNG16 = (uint16_t)(PRNG16 * 2053) + 1384; // next 'random' number

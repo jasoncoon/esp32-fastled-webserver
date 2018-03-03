@@ -431,7 +431,12 @@ function postColor(name, value) {
   $.post(urlBase + "fieldValue?name=" + name + "&value=" + "&r=" + value.r + "&g=" + value.g + "&b=" + value.b, body, function(data) {
     $("#status").html("Set " + name + ": " + data);
   })
-  .fail(function(textStatus, errorThrown) { $("#status").html("Fail: " + textStatus + " " + errorThrown); });
+  .fail(
+    function(jqXHR, textStatus, errorThrown) {
+      console.error(textStatus);
+      console.error(errorThrown);
+      $("#status").html("Fail: " + textStatus + " " + errorThrown);
+    });
 }
 
 function delayPostColor(name, value) {
