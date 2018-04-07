@@ -64,9 +64,12 @@ void handleWeb() {
   // check for connection
   if ( WiFi.status() == WL_CONNECTED ) {
     if (!webServerStarted) {
-      // turn off hte board's LED when connected to wifi
+      // turn off the board's LED when connected to wifi
       digitalWrite(led, 1);
       Serial.println();
+      Serial.println("WiFi connected");
+      Serial.print("IP address: ");
+      Serial.println(WiFi.localIP());
       webServerStarted = true;
       setupWeb();
     }

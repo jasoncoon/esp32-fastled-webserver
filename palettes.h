@@ -221,4 +221,4 @@ const String paletteNames[paletteCount] = {
 };
 
 CRGBPalette16 currentPalette( CRGB::Black);
-CRGBPalette16 targetPalette( gGradientPalettes[0] );
+CRGBPalette16 targetPalette( palettes[0] );

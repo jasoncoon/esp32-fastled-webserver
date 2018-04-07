@@ -230,7 +230,6 @@ void loop()
     // Call the current pattern function once, updating the 'leds' array
     patterns[currentPatternIndex].pattern();
 
-    // do some periodic updates
     EVERY_N_MILLISECONDS(40) {
       // slowly blend the current palette to the next
       nblendPaletteTowardPalette(currentPalette, targetPalette, 8);
@@ -267,5 +266,4 @@ void nextPalette()
   currentPaletteIndex = (currentPaletteIndex + 1) % paletteCount;
   targetPalette = palettes[currentPaletteIndex];
 }
-
 
