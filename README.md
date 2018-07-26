@@ -48,7 +48,7 @@ Control addressable LEDs with an ESP32 via a web browser over Wi-Fi.
 
 [![Adafruit NeoPixel Ring](https://www.adafruit.com/images/145x109/1586-00.jpg)](https://www.adafruit.com/product/1586)
 
-[Adafruit NeoPixel Ring]
+[Adafruit NeoPixel Ring](https://www.adafruit.com/product/1586)
 
 #### Other hardware:
 
