@@ -252,7 +252,8 @@ void loop()
 
   // FastLED.show();
   // insert a delay to keep the framerate modest
-  FastLED.delay(1000 / FRAMES_PER_SECOND);
+  // FastLED.delay(1000 / FRAMES_PER_SECOND);
+  delay(1000 / FRAMES_PER_SECOND);
 }
 
 void nextPattern()
@@ -266,4 +267,3 @@ void nextPalette()
   currentPaletteIndex = (currentPaletteIndex + 1) % paletteCount;
   targetPalette = palettes[currentPaletteIndex];
 }
-

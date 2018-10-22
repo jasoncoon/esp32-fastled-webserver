@@ -23,7 +23,7 @@
 */
 
 #include "palettes.h";
-#include "twinkleFOX.h"
+#include "twinkleFox.h"
 
 void rainbow()
 {
@@ -283,4 +283,3 @@ PatternAndNameList patterns = {
 };
 
 const uint8_t patternCount = ARRAY_SIZE(patterns);
-
