@@ -75,8 +75,8 @@ Recommended by [Adafruit NeoPixel "Best Practices"](https://learn.adafruit.com/a
 
 To fix an [issue with serving files from SPIFFS over the web server](https://github.com/jasoncoon/esp32-fastled-webserver/issues/1), I used Yves BAZIN's fix here: https://github.com/hpwit/lib
 
-Copy [libspiffs.a](libspiffs.a) to the ESP32 tools directory:
+Copy [libspiffs.a](https://github.com/jasoncoon/esp32-fastled-webserver/raw/master/libspiffs.a) to the ESP32 tools directory:
 `\Documents\Arduino\hardware\espressif\esp32\tools\sdk\lib\libspiffs.a`
 
-And copy [esp32fs.jar](esp32fs.jar) to the Arduino tools directory:
+And copy [esp32fs.jar](https://github.com/jasoncoon/esp32-fastled-webserver/raw/master/esp32fs.jar) to the Arduino tools directory:
 `\Documents\Arduino\tools\ESP32FS\tool\esp32fs.jar`
