@@ -29,7 +29,8 @@
 // AP mode password
 //const char WiFiAPPSK[] = "";
 
-void setupWifi() {
+void setupWifi()
+{
   //  // Set Hostname.
   //  String hostname(HOSTNAME);
   //
@@ -61,7 +62,8 @@ void setupWifi() {
   //  {
   WiFi.mode(WIFI_STA);
   Serial.printf("Connecting to %s\n", ssid);
-  if (String(WiFi.SSID()) != String(ssid)) {
+  if (String(WiFi.SSID()) != String(ssid))
+  {
     WiFi.begin(ssid, password);
   }
   //  }
