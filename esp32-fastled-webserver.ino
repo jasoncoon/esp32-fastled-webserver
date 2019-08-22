@@ -24,7 +24,7 @@
 
 #include <FastLED.h>
 #include <WiFi.h>
-#include <ESP8266WebServer.h>
+#include <WebServer.h>
 #include <FS.h>
 #include <SPIFFS.h>
 #include <EEPROM.h>
