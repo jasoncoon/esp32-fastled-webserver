@@ -91,10 +91,10 @@ CRGB gBackgroundColor = CRGB::Black;
 // symmetrical up-and-down triangle sawtooth waveform, except that this
 // function produces a triangle wave with a faster attack and a slower decay:
 //
-//     / \
-//    /     \
-//   /         \
-//  /             \
+//     / \__
+//    /     \__
+//   /         \__
+//  /             \__
 //
 
 uint8_t attackDecayWave8( uint8_t i)
