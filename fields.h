@@ -217,24 +217,24 @@ FieldList fields = {
   { "brightness",         "Brightness",        NumberFieldType,     1,          255,  getBrightness,       NULL,         setBrightness       },
   { "speed",              "Speed",             NumberFieldType,     1,          255,  getSpeed,            NULL,         setSpeed            },
   
-  { "patternSection",     "Pattern",           SectionFieldType },
+  { "patternSection",     "Pattern",           SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
   { "pattern",            "Pattern",           SelectFieldType,     0, patternCount,  getPattern,          getPatterns,  setPattern          },
   { "autoplay",           "Cycle Patterns",    BooleanFieldType,    0,            1,  getAutoplay,         NULL,         setAutoplay         },
   { "autoplayDuration",   "Pattern Duration",  NumberFieldType,     1,          255,  getAutoplayDuration, NULL,         setAutoplayDuration },
   
-  { "paletteSection",     "Palette",           SectionFieldType },
+  { "paletteSection",     "Palette",           SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
   { "palette",            "Palette",           SelectFieldType,     0, paletteCount,  getPalette,          getPalettes,  setPalette          },
   { "cyclePalettes",      "Cycle Palettes",    BooleanFieldType,    0,            1,  getCyclePalettes,    NULL,         setCyclePalettes    },
   { "paletteDuration",    "Palette Duration",  NumberFieldType,     1,          255,  getPaletteDuration,  NULL,         setPaletteDuration  },
   
-  { "solidColorSection",  "Solid Color",       SectionFieldType },
+  { "solidColorSection",  "Solid Color",       SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
   { "solidColor",         "Color",             ColorFieldType,      0,          255,  getSolidColor,       NULL,         setSolidColor       },
   
-  { "fire",               "Fire & Water",      SectionFieldType },
+  { "fire",               "Fire & Water",      SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
   { "cooling",            "Cooling",           NumberFieldType,     0,          255,  getCooling,          NULL, setCooling                  },
   { "sparking",           "Sparking",          NumberFieldType,     0,          255,  getSparking,         NULL, setSparking                 },
   
-  { "twinklesSection",    "Twinkles",          SectionFieldType },
+  { "twinklesSection",    "Twinkles",          SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
   { "twinkleSpeed",       "Twinkle Speed",     NumberFieldType,     0,            8,  getTwinkleSpeed,     NULL, setTwinkleSpeed             },
   { "twinkleDensity",     "Twinkle Density",   NumberFieldType,     0,            8,  getTwinkleDensity,   NULL, setTwinkleDensity           },
 };
