@@ -31,7 +31,7 @@ const String SelectFieldType = "Select";
 const String ColorFieldType = "Color";
 const String SectionFieldType = "Section";
 
-typedef struct Field {
+typedef struct {
   public:
     String name;
     String label;
@@ -41,7 +41,7 @@ typedef struct Field {
     FieldGetter getValue;
     FieldGetter getOptions;
     FieldSetter setValue;
-};
+} Field;
 
 typedef Field FieldList[];
 
@@ -207,4 +207,3 @@ String getFieldsJson(FieldList fields, uint8_t count) {
 
   return json;
 }
-
