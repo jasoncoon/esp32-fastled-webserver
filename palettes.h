@@ -106,7 +106,7 @@ const TProgmemRGBPalette16 IcyBlue_p FL_PROGMEM =
 
 CRGBPalette16 IceColors_p = CRGBPalette16(CRGB::Black, CRGB::Blue, CRGB::Aqua, CRGB::White);
 
-#include "gradientPalettes.h";
+#include "gradientPalettes.h"
 
 const CRGBPalette16 palettes[] = {
   RainbowColors_p,
