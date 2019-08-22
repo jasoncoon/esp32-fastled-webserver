@@ -81,8 +81,8 @@ String setPalette(String value) {
   // clamp to [0.. paletteCount-1]
   if (tmp < 1) {
     tmp = 1;
-  } else if (tmp > (paletteCount+1)) {
-    tmp = paletteCount+1;
+  } else if (tmp > (paletteCount-1)) {
+    tmp = paletteCount-1;
   }
   currentPaletteIndex = tmp;
   targetPalette = palettes[currentPaletteIndex];
