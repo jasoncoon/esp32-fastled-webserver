@@ -24,6 +24,8 @@
 
 #include "palettes.h";
 #include "twinkleFox.h"
+#include "Map.h"
+#include "Noise.h"
 
 void rainbow()
 {
@@ -252,6 +254,17 @@ void colorWaves()
   colorwaves(leds, NUM_LEDS, currentPalette);
 }
 
+void strandTest()
+{
+  uint8_t i = speed;
+
+  if (speed >= NUM_LEDS) speed = NUM_LEDS - 1;
+
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
+
+  leds[i] = solidColor;
+}
+
 typedef void (*Pattern)();
 typedef Pattern PatternList[];
 typedef struct {
@@ -263,6 +276,28 @@ typedef PatternAndName PatternAndNameList[];
 PatternAndNameList patterns = {
   { pride,                  "Pride" },
   { colorWaves,             "Color Waves" },
+
+  // matrix patterns
+  { xyTest,    "XY Test" },
+  { xPalette,  "X Axis Palette" },
+  { yPalette,  "Y Axis Palette" },
+  { xyPalette, "XY Axis Palette" },
+  { xGradientPalette,  "X Axis Gradient Palette" },
+  { yGradientPalette,  "Y Axis Gradient Palette" },
+  { xyGradientPalette, "XY Axis Gradient Palette" },
+
+  // noise patterns
+  { fireNoise, "Fire Noise" },
+  { fireNoise2, "Fire Noise 2" },
+  { lavaNoise, "Lava Noise" },
+  { rainbowNoise, "Rainbow Noise" },
+  { rainbowStripeNoise, "Rainbow Stripe Noise" },
+  { partyNoise, "Party Noise" },
+  { forestNoise, "Forest Noise" },
+  { cloudNoise, "Cloud Noise" },
+  { oceanNoise, "Ocean Noise" },
+  { blackAndWhiteNoise, "Black & White Noise" },
+  { blackAndBlueNoise, "Black & Blue Noise" },
 
   // TwinkleFOX patterns
   { drawTwinkles, "Twinkles" },
@@ -278,6 +313,8 @@ PatternAndNameList patterns = {
   { sinelon, "sinelon" },
   { juggle, "juggle" },
   { bpm, "bpm" },
+
+  { strandTest,             "Strand Test" },
 
   { showSolidColor,         "Solid Color" },
 };
