@@ -72,6 +72,9 @@ void handleWeb() {
       Serial.println(WiFi.localIP());
       webServerStarted = true;
       setupWeb();
+      
+      //init and get the time
+      configTime(gmtOffset_sec, daylightOffset_sec, ntpServer); 
     }
     webServer.handleClient();
   } else {
@@ -84,4 +87,3 @@ void handleWeb() {
     }
   }
 }
-

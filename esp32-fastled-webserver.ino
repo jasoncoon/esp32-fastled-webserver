@@ -33,6 +33,13 @@
 #warning "Requires FastLED 3.1.8 or later; check github for latest code."
 #endif
 
+int timezoneOffset = -6; // Central Time
+long gmtOffset_sec = timezoneOffset * 3600;
+const int daylightOffset_sec = 3600;
+const char* ntpServer  = "pool.ntp.org";
+int timeInt = 8888;  // keeps track of what number to display
+bool colon = false;
+
 WebServer webServer(80);
 
 const int led = 5;
@@ -73,7 +80,7 @@ unsigned long paletteTimeout = 0;
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
 #define NUM_LEDS    86
-CRGB leds[NUM_LEDS];
+CRGBArray<NUM_LEDS> leds;
 
 #define MILLI_AMPS         2000 // IMPORTANT: set the max milli-Amps of your power supply (4A = 4000mA)
 #define FRAMES_PER_SECOND  60
@@ -124,6 +131,17 @@ void listDir(fs::FS &fs, const char * dirname, uint8_t levels) {
   }
 }
 
+void printLocalTime()
+{
+  struct tm timeinfo;
+  if(!getLocalTime(&timeinfo)){
+    Serial.println("Failed to obtain time");
+    return;
+  }
+  Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+  timeInt = (timeinfo.tm_hour*100+timeinfo.tm_min);
+}
+
 void setup() {
   pinMode(led, OUTPUT);
   digitalWrite(led, 1);
@@ -134,7 +152,7 @@ void setup() {
   SPIFFS.begin();
   listDir(SPIFFS, "/", 1);
 
-//  loadFieldsFromEEPROM(fields, fieldCount);
+  loadFieldsFromEEPROM(fields, fieldCount);
 
   setupWifi();
   setupWeb();
@@ -150,6 +168,71 @@ void setup() {
   autoPlayTimeout = millis() + (autoplayDuration * 1000);
 }
 
+void maskTime(int timeInt){
+  // Based on the current timeInt set number segments on or off
+  uint8_t c1 = 0;  // Variable to store 1s digit
+  uint8_t c10 = 0;  // Variable to store 10s digit
+  uint8_t c100 = 0;  // Variable to store 100s digit
+  uint8_t c1000 = 0;  // Variable to store 100s digit
+  int c;
+
+  c1 = timeInt % 10;
+  c10 = (timeInt / 10) % 10;
+  c100 = (timeInt / 100) % 10;
+  c1000 = (timeInt / 1000) % 10;
+  
+  CRGB color = CRGB::Black; //unused segment color
+  
+  //next block of if statements sets segments to black to form digits
+  if (c1000 == 0) { seg1G = color; }
+  if (c1000 == 1) { seg1A = seg1D = seg1E = seg1F = seg1G = color; } 
+  if (c1000 == 2) { seg1C = seg1F = color; } 
+  if (c1000 == 3) { seg1E = seg1F = color; } 
+  if (c1000 == 4) { seg1A = seg1D = seg1E = color; } 
+  if (c1000 == 5) { seg1B = seg1E = color; } 
+  if (c1000 == 6) { seg1B = color; } //B
+  if (c1000 == 7) { seg1D = seg1E = seg1F = seg1G = color; } 
+  if (c1000 == 8) {  }
+  if (c1000 == 9) { seg1D = seg1E = color; } 
+
+  if (c100 == 0) { seg2G = color; }
+  if (c100 == 1) { seg2A = seg2D = seg2E = seg2F = seg2G = color; } 
+  if (c100 == 2) { seg2C = seg2F = color; } 
+  if (c100 == 3) { seg2E = seg2F = color; } 
+  if (c100 == 4) { seg2A = seg2D = seg2E = color; } 
+  if (c100 == 5) { seg2B = seg2E = color; } 
+  if (c100 == 6) { seg2B = color; } //B
+  if (c100 == 7) { seg2D = seg2E = seg2F = seg2G = color; } 
+  if (c100 == 8) {  }
+  if (c100 == 9) { seg2D = seg2E = color; } 
+
+  if (c10 == 0) { seg3G = color; }
+  if (c10 == 1) { seg3A = seg3D = seg3E = seg3F = seg3G = color; } 
+  if (c10 == 2) { seg3C = seg3F = color; } 
+  if (c10 == 3) { seg3E = seg3F = color; } 
+  if (c10 == 4) { seg3A = seg3D = seg3E = color; } 
+  if (c10 == 5) { seg3B = seg3E = color; } 
+  if (c10 == 6) { seg3B = color; } //B
+  if (c10 == 7) { seg3D = seg3E = seg3F = seg3G = color; } 
+  if (c10 == 8) {  }
+  if (c10 == 9) { seg3D = seg3E = color; } 
+
+  if (c1 == 0) { seg4G = color; }
+  if (c1 == 1) { seg4A = seg4D = seg4E = seg4F = seg4G = color; } 
+  if (c1 == 2) { seg4C = seg4F = color; } 
+  if (c1 == 3) { seg4E = seg4F = color; } 
+  if (c1 == 4) { seg4A = seg4D = seg4E = color; } 
+  if (c1 == 5) { seg4B = seg4E = color; } 
+  if (c1 == 6) { seg4B = color; } //B
+  if (c1 == 7) { seg4D = seg4E = seg4F = seg4G = color; } 
+  if (c1 == 8) {  }
+  if (c1 == 9) { seg4D = seg4E = color; } 
+
+  if (!colon){
+    col = CRGB::Black; //turns off colon to make it blink
+  }
+}
+
 void loop()
 {
   handleWeb();
@@ -160,6 +243,7 @@ void loop()
   else {
     // Call the current pattern function once, updating the 'leds' array
     patterns[currentPatternIndex].pattern();
+    maskTime(timeInt);
 
     EVERY_N_MILLISECONDS(40) {
       // slowly blend the current palette to the next
@@ -184,6 +268,21 @@ void loop()
   // insert a delay to keep the framerate modest
   // FastLED.delay(1000 / FRAMES_PER_SECOND);
   delay(1000 / FRAMES_PER_SECOND);
+
+  // time stuff
+  EVERY_N_SECONDS(1){
+    colon = !colon; // flash the colon
+  }
+  
+  EVERY_N_SECONDS(10){
+    printLocalTime();
+  } 
+  
+  EVERY_N_MINUTES(5){
+    if ( WiFi.status() == WL_CONNECTED) {
+      configTime(gmtOffset_sec, daylightOffset_sec, ntpServer); //get fresh NTP time
+    }
+  }
 }
 
 void nextPattern()

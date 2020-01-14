@@ -24,8 +24,8 @@
 
 #include "palettes.h";
 #include "twinkleFox.h"
-#include "Map.h"
-#include "Noise.h"
+#include "map.h"
+#include "noise.h"
 
 void rainbow()
 {

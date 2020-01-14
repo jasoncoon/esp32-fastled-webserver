@@ -36,8 +36,8 @@ typedef struct Field {
     String name;
     String label;
     String type;
-    uint8_t min;
-    uint8_t max;
+    int min;
+    int max;
     FieldGetter getValue;
     FieldGetter getOptions;
     FieldSetter setValue;
@@ -95,10 +95,18 @@ void writeFieldsToEEPROM(FieldList fields, uint8_t count) {
       EEPROM.write(index++, color.r);
       EEPROM.write(index++, color.g);
       EEPROM.write(index++, color.b);
+    } else if (field.name == "timezoneOffset") {
+      int i = value.toInt();
+      byte v = i - field.min;
+      EEPROM.write(index++, v);
     } else {
       byte v = value.toInt();
       EEPROM.write(index++, v);
     }
+  
+    Serial.print("Wrote field: "); Serial.print(i);
+    Serial.print(", name: "); Serial.print(field.name);
+    Serial.print(", value: "); Serial.println(field.getValue());
   }
 
   EEPROM.commit();
@@ -162,10 +170,18 @@ void loadFieldsFromEEPROM(FieldList fields, uint8_t count) {
       String g = String(EEPROM.read(index++));
       String b = String(EEPROM.read(index++));
       field.setValue(r + "," + g + "," + b);
+    } else if (field.name == "timezoneOffset") {
+      byte b = EEPROM.read(index++);
+      int v = b + field.min;
+      field.setValue(String(v));
     } else {
       byte v = EEPROM.read(index++);
       field.setValue(String(v));
     }
+  
+    Serial.print("Loaded field: "); Serial.print(i);
+    Serial.print(", name: "); Serial.print(field.name);
+    Serial.print(", value: "); Serial.println(field.getValue());
   }
 }
 
@@ -207,4 +223,3 @@ String getFieldsJson(FieldList fields, uint8_t count) {
 
   return json;
 }
-

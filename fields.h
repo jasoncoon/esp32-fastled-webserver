@@ -42,6 +42,24 @@ String setBrightness(String value) {
   return String(brightness);
 }
 
+String getTimezoneOffset() {
+  return String(timezoneOffset);
+}
+
+String setTimezoneOffset(String value) {
+  timezoneOffset = value.toInt();
+  if (timezoneOffset < -12) timezoneOffset = -12;
+  else if (timezoneOffset > 14) timezoneOffset = 14;
+  
+  gmtOffset_sec = timezoneOffset * 3600;
+
+  if ( WiFi.status() == WL_CONNECTED) {
+    configTime(gmtOffset_sec, daylightOffset_sec, ntpServer); //get fresh NTP time
+  }
+  
+  return String(timezoneOffset);
+}
+
 String getPattern() {
   return String(currentPatternIndex);
 }
@@ -213,6 +231,7 @@ String setTwinkleDensity(String value) {
 
 FieldList fields = {
   { "power", "Power", BooleanFieldType, 0, 1, getPower, NULL, setPower },
+  { "timezoneOffset", "Timezone Offset Hours", NumberFieldType, -12, 14, getTimezoneOffset, NULL, setTimezoneOffset },
   { "brightness", "Brightness", NumberFieldType, 1, 255, getBrightness, NULL, setBrightness },
   { "speed", "Speed", NumberFieldType, 1, 255, getSpeed, NULL, setSpeed },
   
