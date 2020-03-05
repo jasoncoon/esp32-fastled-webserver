@@ -22,7 +22,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "palettes.h";
+#include "palettes.h"
 #include "twinkleFox.h"
 
 void rainbow()
