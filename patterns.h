@@ -288,6 +288,20 @@ PatternAndNameList patterns = {
   { pacifica_loop,           "Pacifica" },
   { pacifica_fibonacci_loop, "Pacifica Fibonacci" },
 
+  // audio patterns
+  { spectrumWaves,          "Spectrum Waves" },
+  { spectrumPaletteWaves,   "Spectrum Palette Waves" },
+  { spectrumPaletteWaves2,  "Spectrum Palette Waves 2" },
+  { spectrumPaletteWaves3,  "Spectrum Palette Waves 3" },
+  { spectrumWaves2,         "Spectrum Waves 2" },
+  { spectrumWaves3,         "Spectrum Waves 3" },
+  { drawVU,                 "VU" },
+  { drawVU2,                "VU2" },
+  { analyzerColumns,        "Analyzer Columns" },
+  { analyzerPeakColumns,    "Analyzer Peak Columns" },
+  { beatWaves,              "BeatWaves" },
+  { beatWaves2,              "BeatWaves2" },
+
   // matrix patterns
   { anglePalette,  "Angle Palette" },
   { radiusPalette,  "Radius Palette" },

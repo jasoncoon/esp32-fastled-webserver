@@ -94,6 +94,7 @@ CRGB leds[NUM_LEDS];
 
 #include "palettes.h"
 #include "map.h"
+#include "audio.h"
 #include "patterns.h"
 
 #include "field.h"
@@ -150,10 +151,12 @@ void setup() {
   SPIFFS.begin();
   listDir(SPIFFS, "/", 1);
 
-//  loadFieldsFromEEPROM(fields, fieldCount);
+  loadFieldsFromEEPROM(fields, fieldCount);
 
   setupWifi();
   setupWeb();
+
+  initializeAudio();
 
   // three-wire LEDs (WS2811, WS2812, NeoPixel)
   FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
@@ -187,6 +190,14 @@ void loop()
 
   timeClient.update();
   
+  currentMillis = millis(); // save the current timer value
+
+  // analyze the audio input
+  if (currentMillis - audioMillis > AUDIODELAY) {
+    audioMillis = currentMillis;
+    readAudio();
+  }
+
   if (power == 0) {
     fill_solid(leds, NUM_LEDS, CRGB::Black);
   }
