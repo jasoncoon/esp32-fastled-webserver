@@ -29,8 +29,8 @@
 #include <SPIFFS.h>
 #include <EEPROM.h>
 
-#if defined(FASTLED_VERSION) && (FASTLED_VERSION < 3001008)
-#warning "Requires FastLED 3.1.8 or later; check github for latest code."
+#if defined(FASTLED_VERSION) && (FASTLED_VERSION < 3003000)
+#warning "Requires FastLED 3.3 or later; check github for latest code."
 #endif
 
 WebServer webServer(80);
@@ -69,20 +69,17 @@ unsigned long paletteTimeout = 0;
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
-#define DATA_PIN    12 // pins tested so far on the Feather ESP32: 13, 12, 27, 33, 15, 32, 14, SCL
+#define DATA_PIN    12
 //#define CLK_PIN   4
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER RGB
-#define NUM_STRIPS 8
+#define NUM_STRIPS  8
 #define NUM_LEDS_PER_STRIP 100
 #define NUM_LEDS NUM_LEDS_PER_STRIP * NUM_STRIPS
 CRGB leds[NUM_LEDS];
 
 #define MILLI_AMPS         4000 // IMPORTANT: set the max milli-Amps of your power supply (4A = 4000mA)
 #define FRAMES_PER_SECOND  120
-
-// -- The core to run FastLED.show()
-#define FASTLED_SHOW_CORE 0
 
 #include "patterns.h"
 
@@ -98,49 +95,6 @@ CRGB leds[NUM_LEDS];
 // pushed to public source control (GitHub).
 // const char* ssid = "........";
 // const char* password = "........";
-
-// -- Task handles for use in the notifications
-static TaskHandle_t FastLEDshowTaskHandle = 0;
-static TaskHandle_t userTaskHandle = 0;
-
-/** show() for ESP32
-    Call this function instead of FastLED.show(). It signals core 0 to issue a show,
-    then waits for a notification that it is done.
-*/
-void FastLEDshowESP32()
-{
-  if (userTaskHandle == 0) {
-    // -- Store the handle of the current task, so that the show task can
-    //    notify it when it's done
-    userTaskHandle = xTaskGetCurrentTaskHandle();
-
-    // -- Trigger the show task
-    xTaskNotifyGive(FastLEDshowTaskHandle);
-
-    // -- Wait to be notified that it's done
-    const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 200 );
-    ulTaskNotifyTake(pdTRUE, xMaxBlockTime);
-    userTaskHandle = 0;
-  }
-}
-
-/** show Task
-    This function runs on core 0 and just waits for requests to call FastLED.show()
-*/
-void FastLEDshowTask(void *pvParameters)
-{
-  // -- Run forever...
-  for (;;) {
-    // -- Wait for the trigger
-    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-
-    // -- Do the show (synchronously)
-    FastLED.show();
-
-    // -- Notify the calling task
-    xTaskNotifyGive(userTaskHandle);
-  }
-}
 
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels) {
   Serial.printf("Listing directory: %s\n", dirname);
@@ -209,13 +163,6 @@ void setup() {
   // set master brightness control
   FastLED.setBrightness(brightness);
 
-  int core = xPortGetCoreID();
-  Serial.print("Main code running on core ");
-  Serial.println(core);
-
-  // -- Create the FastLED show task
-  xTaskCreatePinnedToCore(FastLEDshowTask, "FastLEDshowTask", 2048, NULL, 2, &FastLEDshowTaskHandle, FASTLED_SHOW_CORE);
-
   autoPlayTimeout = millis() + (autoplayDuration * 1000);
 }
 
@@ -248,9 +195,8 @@ void loop()
   }
 
   // send the 'leds' array out to the actual LED strip
-  FastLEDshowESP32();
-
-  // FastLED.show();
+  FastLED.show();
+  
   // insert a delay to keep the framerate modest
   // FastLED.delay(1000 / FRAMES_PER_SECOND);
   delay(1000 / FRAMES_PER_SECOND);
