@@ -22,7 +22,9 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "palettes.h"
+#include "noise.h"
+#include "pacifica.h"
+#include "pacificaFibonacci.h"
 #include "twinkleFox.h"
 
 void rainbow()
@@ -152,8 +154,8 @@ void water()
 // Pride2015 by Mark Kriegsman: https://gist.github.com/kriegsman/964de772d64c502760e5
 // This function draws rainbows with an ever-changing,
 // widely-varying set of parameters.
-void pride()
-{
+
+void fillWithPride(bool useFibonacciOrder) {
   static uint16_t sPseudotime = 0;
   static uint16_t sLastMillis = 0;
   static uint16_t sHue16 = 0;
@@ -187,16 +189,27 @@ void pride()
     CRGB newcolor = CHSV( hue8, sat8, bri8);
 
     uint16_t pixelnumber = i;
+
+    if (useFibonacciOrder) pixelnumber = fibonacciToPhysical[i];
+
     pixelnumber = (NUM_LEDS - 1) - pixelnumber;
 
     nblend( leds[pixelnumber], newcolor, 64);
   }
 }
 
+void pride() {
+  fillWithPride(false);
+}
+
+void prideFibonacci() {
+  fillWithPride(true);
+}
+
 // ColorWavesWithPalettes by Mark Kriegsman: https://gist.github.com/kriegsman/8281905786e8b2632aeb
 // This function draws color waves with an ever-changing,
 // widely-varying set of parameters, using a color palette.
-void colorwaves( CRGB* ledarray, uint16_t numleds, CRGBPalette16& palette)
+void fillWithColorWaves( CRGB* ledarray, uint16_t numleds, CRGBPalette16 palette, bool useFibonacciOrder)
 {
   static uint16_t sPseudotime = 0;
   static uint16_t sLastMillis = 0;
@@ -241,15 +254,21 @@ void colorwaves( CRGB* ledarray, uint16_t numleds, CRGBPalette16& palette)
     CRGB newcolor = ColorFromPalette( palette, index, bri8);
 
     uint16_t pixelnumber = i;
+
+    if (useFibonacciOrder) pixelnumber = fibonacciToPhysical[i];
+
     pixelnumber = (numleds - 1) - pixelnumber;
 
     nblend( ledarray[pixelnumber], newcolor, 128);
   }
 }
 
-void colorWaves()
-{
-  colorwaves(leds, NUM_LEDS, currentPalette);
+void colorWaves() {
+  fillWithColorWaves(leds, NUM_LEDS, palettes[currentPaletteIndex], false);
+}
+
+void colorWavesFibonacci() {
+  fillWithColorWaves(leds, NUM_LEDS, palettes[currentPaletteIndex], true);
 }
 
 typedef void (*Pattern)();
@@ -262,7 +281,40 @@ typedef PatternAndName PatternAndNameList[];
 
 PatternAndNameList patterns = {
   { pride,                  "Pride" },
+  { prideFibonacci,         "Pride Fibonacci" },
   { colorWaves,             "Color Waves" },
+  { colorWavesFibonacci,    "Color Waves Fibonacci" },
+
+  { pacifica_loop,           "Pacifica" },
+  { pacifica_fibonacci_loop, "Pacifica Fibonacci" },
+
+  // matrix patterns
+  { anglePalette,  "Angle Palette" },
+  { radiusPalette,  "Radius Palette" },
+  { xPalette,  "X Axis Palette" },
+  { yPalette,  "Y Axis Palette" },
+  { xyPalette, "XY Axis Palette" },
+
+  { angleGradientPalette,  "Angle Gradient Palette" },
+  { radiusGradientPalette,  "Radius Gradient Palette" },
+  { xGradientPalette,  "X Axis Gradient Palette" },
+  { yGradientPalette,  "Y Axis Gradient Palette" },
+  { xyGradientPalette, "XY Axis Gradient Palette" },
+
+  // noise patterns
+  { fireNoise, "Fire Noise" },
+  { fireNoise2, "Fire Noise 2" },
+  { lavaNoise, "Lava Noise" },
+  { rainbowNoise, "Rainbow Noise" },
+  { rainbowStripeNoise, "Rainbow Stripe Noise" },
+  { partyNoise, "Party Noise" },
+  { forestNoise, "Forest Noise" },
+  { cloudNoise, "Cloud Noise" },
+  { oceanNoise, "Ocean Noise" },
+  { blackAndWhiteNoise, "Black & White Noise" },
+  { blackAndBlueNoise, "Black & Blue Noise" },
+  
+  { drawAnalogClock, "Analog Clock" },
 
   // TwinkleFOX patterns
   { drawTwinkles, "Twinkles" },

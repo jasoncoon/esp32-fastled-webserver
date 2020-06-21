@@ -139,6 +139,27 @@ String setAutoplayDuration(String value) {
   return String(autoplayDuration);
 }
 
+String getShowClock() {
+  return String(showClock);
+}
+
+String setShowClock(String value)
+{
+  showClock = value.toInt();
+  showClock = showClock == 0 ? 0 : 1;
+  return String(showClock);
+}
+
+String setClockBackgroundFade(String value)
+{
+  clockBackgroundFade = value.toInt();
+  return String(clockBackgroundFade);
+}
+
+String getClockBackgroundFade() {
+  return String(clockBackgroundFade);
+}
+
 String getCyclePalettes() {
   return String(cyclePalettes);
 }
@@ -251,6 +272,10 @@ FieldList fields = {
   { "pattern",            "Pattern",           SelectFieldType,     0, patternCount,  getPattern,          getPatterns,  setPattern          },
   { "autoplay",           "Cycle Patterns",    BooleanFieldType,    0,            1,  getAutoplay,         NULL,         setAutoplay         },
   { "autoplayDuration",   "Pattern Duration",  NumberFieldType,     1,          255,  getAutoplayDuration, NULL,         setAutoplayDuration },
+
+  { "clock",              "Clock",             SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
+  { "showClock",          "Show Clock",        BooleanFieldType,    0,            1,  getShowClock,        NULL,         setShowClock        },
+  { "clockBackgroundFade","Background Fade",   NumberFieldType,     0,          255,  getClockBackgroundFade,NULL,       setClockBackgroundFade },
   
   { "paletteSection",     "Palette",           SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
   { "palette",            "Palette",           SelectFieldType,     0, paletteCount,  getPalette,          getPalettes,  setPalette          },
