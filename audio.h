@@ -141,7 +141,7 @@ void readAudio() {
     if (spectrumPeaks[i] < spectrumDecay[i]) spectrumPeaks[i] = spectrumDecay[i];
     spectrumPeaks[i] = spectrumPeaks[i] * (1.0 - PEAKDECAY);
 
-    spectrumByte[i] = spectrumValue[i] / 4;
+    spectrumByte[i] = spectrumValue[i] / 16;  // analogread on esp32 is 0-4095
   }
 
   // Calculate audio levels for automatic gain
