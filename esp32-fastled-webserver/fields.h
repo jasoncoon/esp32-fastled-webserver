@@ -79,8 +79,8 @@ String setPalette(String value) {
   // value.toInt() returns long, while currentPaletteIndex is declared as uint8_t
   long tmp = value.toInt();
   // clamp to [0.. paletteCount-1]
-  if (tmp < 1) {
-    tmp = 1;
+  if (tmp < 0) {
+    tmp = 0;
   } else if (tmp > (paletteCount-1)) {
     tmp = paletteCount-1;
   }
