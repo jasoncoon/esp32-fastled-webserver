@@ -54,6 +54,7 @@ void setupWeb() {
   webServer.serveStatic("/js/app.js", SPIFFS, "/js/app.js", "max-age=86400");
   webServer.serveStatic("/images/atom196.png", SPIFFS, "/images/atom196.png", "max-age=86400");
 
+  httpUpdateServer.setup(&webServer);
   webServer.begin();
   Serial.println ( "HTTP server started" );
 }
