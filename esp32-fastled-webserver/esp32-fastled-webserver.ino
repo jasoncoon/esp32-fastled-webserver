@@ -135,7 +135,7 @@ void setup() {
   SPIFFS.begin();
   listDir(SPIFFS, "/", 1);
 
-//  loadFieldsFromEEPROM(fields, fieldCount);
+ loadFieldsFromEEPROM(fields, fieldCount);
 
   WiFi.mode(WIFI_STA);
   Serial.printf("Connecting to %s\n", ssid);
@@ -145,14 +145,12 @@ void setup() {
 
   setupWeb();
 
-  FastLED.addLeds<LED_TYPE, 18, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
+  FastLED.addLeds<LED_TYPE, 18, COLOR_ORDER>(leds, NUM_LEDS);
   
   FastLED.setMaxPowerInVoltsAndMilliamps(5, MILLI_AMPS);
   
   // set master brightness control
   FastLED.setBrightness(brightness);
-
-  loadFieldsFromEEPROM(fields, fieldCount);
 
   autoPlayTimeout = millis() + (autoplayDuration * 1000);
 }
