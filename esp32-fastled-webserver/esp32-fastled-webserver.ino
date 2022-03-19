@@ -135,7 +135,7 @@ void setup() {
   SPIFFS.begin();
   listDir(SPIFFS, "/", 1);
 
-//  loadFieldsFromEEPROM(fields, fieldCount);
+ loadFieldsFromEEPROM(fields, fieldCount);
 
   WiFi.mode(WIFI_STA);
   Serial.printf("Connecting to %s\n", ssid);

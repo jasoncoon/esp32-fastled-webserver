@@ -266,6 +266,61 @@ void colorWavesFibonacci()
   colorwaves(leds, NUM_LEDS, currentPalette, true);
 }
 
+void fibonacciStarsWithOffset(uint16_t stars[], uint8_t starCount, uint8_t offset = 21, bool setup = false, bool move = false) {
+  // use a number from the Fibonacci sequence for offset to follow a spiral out from the center
+
+  for (uint8_t i = 0; i < starCount; i++) {
+    if (setup || stars[i] >= NUM_LEDS) { 
+      // reset star
+      stars[i] = random8(offset - 1);
+    }
+
+    uint16_t index = fibonacciToPhysical[stars[i]];
+
+    // draw the star
+    leds[index] = ColorFromPalette(currentPalette, stars[i] + gHue); // i * (240 / starCount)
+  }
+
+  // move the stars
+  if(move) {
+    for (uint8_t i = 0; i < starCount; i++) {
+      stars[i] = stars[i] + offset;
+    }
+  }
+}
+
+const uint8_t starCount = 4;
+
+void fibonacciStars13(bool setup = false, bool move = false) {
+  static uint16_t stars[starCount];
+  fibonacciStarsWithOffset(stars, starCount, 13, setup, move);
+}
+
+void fibonacciStars21(bool setup = false, bool move = false) {
+  static uint16_t stars[starCount];
+  fibonacciStarsWithOffset(stars, starCount, 21, setup, move);
+}
+
+void fibonacciStars34(bool setup = false, bool move = false) {
+  static uint16_t stars[starCount];
+  fibonacciStarsWithOffset(stars, starCount, 34, setup, move);
+}
+
+void fibonacciStars() {
+  bool move = false;
+  static bool setup = true;
+  fadeToBlackBy( leds, NUM_LEDS, 8);
+
+  EVERY_N_MILLIS(60) {
+    move = true;
+  }
+
+  fibonacciStars13(setup, move);
+  fibonacciStars21(setup, move);
+  fibonacciStars34(setup, move);
+  setup = false;
+}
+
 typedef void (*Pattern)();
 typedef Pattern PatternList[];
 typedef struct {
@@ -275,11 +330,13 @@ typedef struct {
 typedef PatternAndName PatternAndNameList[];
 
 PatternAndNameList patterns = {
-  { colorWavesFibonacci,             "Color Waves Fibonacci" },
-  { prideFibonacci,                  "Pride Fibonacci" },
+  { colorWavesFibonacci, "Color Waves Fibonacci" },
+  { prideFibonacci,      "Pride Fibonacci" },
 
-  { colorWaves,             "Color Waves" },
-  { pride,                  "Pride" },
+  { fibonacciStars,      "Fibonacci Stars" },
+
+  { colorWaves,          "Color Waves" },
+  { pride,               "Pride" },
 
   // TwinkleFOX patterns
   { drawTwinkles, "Twinkles" },
@@ -289,14 +346,14 @@ PatternAndNameList patterns = {
   { water, "Water" },
 
   // DemoReel100 patterns
-  { rainbow, "rainbow" },
-  { rainbowWithGlitter, "rainbowWithGlitter" },
-  { confetti, "confetti" },
-  { sinelon, "sinelon" },
-  { juggle, "juggle" },
-  { bpm, "bpm" },
+  { rainbow, "Rainbow" },
+  { rainbowWithGlitter, "Rainbow With Glitter" },
+  { confetti, "Confetti" },
+  { sinelon, "Sinelon" },
+  { juggle, "Juggle" },
+  { bpm, "BPM" },
 
-  { showSolidColor,         "Solid Color" },
+  { showSolidColor, "Solid Color" },
 };
 
 const uint8_t patternCount = ARRAY_SIZE(patterns);
