@@ -269,6 +269,8 @@ void colorWavesFibonacci()
 void fibonacciStarsWithOffset(uint16_t stars[], uint8_t starCount, uint8_t offset = 21, bool setup = false, bool move = false) {
   // use a number from the Fibonacci sequence for offset to follow a spiral out from the center
 
+  const uint8_t hues = NUM_LEDS / 256;
+
   for (uint8_t i = 0; i < starCount; i++) {
     if (setup || stars[i] >= NUM_LEDS) { 
       // reset star
@@ -278,7 +280,7 @@ void fibonacciStarsWithOffset(uint16_t stars[], uint8_t starCount, uint8_t offse
     uint16_t index = fibonacciToPhysical[stars[i]];
 
     // draw the star
-    leds[index] = ColorFromPalette(currentPalette, stars[i] + gHue); // i * (240 / starCount)
+    leds[index] = ColorFromPalette(currentPalette, (stars[i] / hues) + gHue); // i * (240 / starCount)
   }
 
   // move the stars
@@ -289,21 +291,31 @@ void fibonacciStarsWithOffset(uint16_t stars[], uint8_t starCount, uint8_t offse
   }
 }
 
-const uint8_t starCount = 4;
+const uint8_t starCount = 16;
 
-void fibonacciStars13(bool setup = false, bool move = false) {
-  static uint16_t stars[starCount];
-  fibonacciStarsWithOffset(stars, starCount, 13, setup, move);
-}
+// void fibonacciStars13(bool setup = false, bool move = false) {
+//   static uint16_t stars[starCount];
+//   fibonacciStarsWithOffset(stars, starCount, 13, setup, move);
+// }
 
-void fibonacciStars21(bool setup = false, bool move = false) {
-  static uint16_t stars[starCount];
-  fibonacciStarsWithOffset(stars, starCount, 21, setup, move);
-}
+// void fibonacciStars21(bool setup = false, bool move = false) {
+//   static uint16_t stars[starCount];
+//   fibonacciStarsWithOffset(stars, starCount, 21, setup, move);
+// }
 
 void fibonacciStars34(bool setup = false, bool move = false) {
   static uint16_t stars[starCount];
   fibonacciStarsWithOffset(stars, starCount, 34, setup, move);
+}
+
+void fibonacciStars55(bool setup = false, bool move = false) {
+  static uint16_t stars[starCount];
+  fibonacciStarsWithOffset(stars, starCount, 55, setup, move);
+}
+
+void fibonacciStars89(bool setup = false, bool move = false) {
+  static uint16_t stars[starCount];
+  fibonacciStarsWithOffset(stars, starCount, 89, setup, move);
 }
 
 void fibonacciStars() {
@@ -315,9 +327,11 @@ void fibonacciStars() {
     move = true;
   }
 
-  fibonacciStars13(setup, move);
-  fibonacciStars21(setup, move);
+  // fibonacciStars13(setup, move);
+  // fibonacciStars21(setup, move);
   fibonacciStars34(setup, move);
+  fibonacciStars55(setup, move);
+  fibonacciStars89(setup, move);
   setup = false;
 }
 
