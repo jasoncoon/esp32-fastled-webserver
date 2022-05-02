@@ -245,7 +245,7 @@ FieldList fields = {
   // name                 label                type               min,          max,  getValue,            getOptions,   setValue
   { "power",              "Power",             BooleanFieldType,    0,            1,  getPower,            NULL,         setPower            },
   { "brightness",         "Brightness",        NumberFieldType,     1,          255,  getBrightness,       NULL,         setBrightness       },
-  { "speed",              "Speed",             NumberFieldType,     1,          255,  getSpeed,            NULL,         setSpeed            },
+  // { "speed",              "Speed",             NumberFieldType,     1,          255,  getSpeed,            NULL,         setSpeed            },
   
   { "patternSection",     "Pattern",           SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
   { "pattern",            "Pattern",           SelectFieldType,     0, patternCount,  getPattern,          getPatterns,  setPattern          },
@@ -257,16 +257,16 @@ FieldList fields = {
   { "cyclePalettes",      "Cycle Palettes",    BooleanFieldType,    0,            1,  getCyclePalettes,    NULL,         setCyclePalettes    },
   { "paletteDuration",    "Palette Duration",  NumberFieldType,     1,          255,  getPaletteDuration,  NULL,         setPaletteDuration  },
   
-  { "solidColorSection",  "Solid Color",       SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
-  { "solidColor",         "Color",             ColorFieldType,      0,          255,  getSolidColor,       NULL,         setSolidColor       },
+  // { "solidColorSection",  "Solid Color",       SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
+  // { "solidColor",         "Color",             ColorFieldType,      0,          255,  getSolidColor,       NULL,         setSolidColor       },
   
-  { "fire",               "Fire & Water",      SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
-  { "cooling",            "Cooling",           NumberFieldType,     0,          255,  getCooling,          NULL, setCooling                  },
-  { "sparking",           "Sparking",          NumberFieldType,     0,          255,  getSparking,         NULL, setSparking                 },
+  // { "fire",               "Fire & Water",      SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
+  // { "cooling",            "Cooling",           NumberFieldType,     0,          255,  getCooling,          NULL, setCooling                  },
+  // { "sparking",           "Sparking",          NumberFieldType,     0,          255,  getSparking,         NULL, setSparking                 },
   
-  { "twinklesSection",    "Twinkles",          SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
-  { "twinkleSpeed",       "Twinkle Speed",     NumberFieldType,     0,            8,  getTwinkleSpeed,     NULL, setTwinkleSpeed             },
-  { "twinkleDensity",     "Twinkle Density",   NumberFieldType,     0,            8,  getTwinkleDensity,   NULL, setTwinkleDensity           },
+  // { "twinklesSection",    "Twinkles",          SectionFieldType,    0,            0,  NULL,                NULL,         NULL                },
+  // { "twinkleSpeed",       "Twinkle Speed",     NumberFieldType,     0,            8,  getTwinkleSpeed,     NULL, setTwinkleSpeed             },
+  // { "twinkleDensity",     "Twinkle Density",   NumberFieldType,     0,            8,  getTwinkleDensity,   NULL, setTwinkleDensity           },
 };
 
 uint8_t fieldCount = ARRAY_SIZE(fields);

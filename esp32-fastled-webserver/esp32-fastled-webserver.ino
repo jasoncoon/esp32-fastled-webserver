@@ -29,6 +29,7 @@
 #include <SPIFFS.h>
 #include <EEPROM.h>
 #include <HTTPUpdateServer.h>
+#include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager
 
 #if defined(FASTLED_VERSION) && (FASTLED_VERSION < 3003000)
 #warning "Requires FastLED 3.3 or later; check github for latest code."
@@ -36,6 +37,10 @@
 
 WebServer webServer(80);
 HTTPUpdateServer httpUpdateServer;
+WiFiManager wifiManager;
+
+#define NAME_PREFIX "Fibonacci1024-"
+String nameString;
 
 const int led = 5;
 
@@ -80,19 +85,18 @@ CRGB leds[NUM_LEDS];
 #define MILLI_AMPS         10000 // IMPORTANT: set the max milli-Amps of your power supply (4A = 4000mA)
 #define FRAMES_PER_SECOND  120
 
+#include "palettes.h"
+#include "map.h"
+
+#include "noise.h"
 #include "patterns.h"
 
 #include "field.h"
 #include "fields.h"
 
-#include "secrets.h"
+#include "static_eval.h"
+#include "constexpr_strlen.h"
 #include "web.h"
-
-// wifi ssid and password should be added to a file in the sketch named secrets.h
-// the secrets.h file should be added to the .gitignore file and never committed or
-// pushed to public source control (GitHub).
-// const char* ssid = "........";
-// const char* password = "........";
 
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels) {
   Serial.printf("Listing directory: %s\n", dirname);
@@ -129,19 +133,13 @@ void setup() {
   pinMode(led, OUTPUT);
   digitalWrite(led, 1);
 
-  //  delay(3000); // 3 second delay for recovery
+  delay(3000); // 3 second delay for recovery
   Serial.begin(115200);
 
   SPIFFS.begin();
   listDir(SPIFFS, "/", 1);
 
- loadFieldsFromEEPROM(fields, fieldCount);
-
-  WiFi.mode(WIFI_STA);
-  Serial.printf("Connecting to %s\n", ssid);
-  if (String(WiFi.SSID()) != String(ssid)) {
-    WiFi.begin(ssid, password);
-  }
+  loadFieldsFromEEPROM(fields, fieldCount);
 
   setupWeb();
 
@@ -150,6 +148,9 @@ void setup() {
   FastLED.addLeds<LED_TYPE,  1, COLOR_ORDER>(leds, 2 * 205, 205);
   FastLED.addLeds<LED_TYPE,  4, COLOR_ORDER>(leds, 3 * 205, 205);
   FastLED.addLeds<LED_TYPE, 15, COLOR_ORDER>(leds, 4 * 205, 204);
+
+  // FastLED.setDither(BINARY_DITHER);
+  FastLED.setDither(DISABLE_DITHER);
   
   FastLED.setMaxPowerInVoltsAndMilliamps(5, MILLI_AMPS);
   

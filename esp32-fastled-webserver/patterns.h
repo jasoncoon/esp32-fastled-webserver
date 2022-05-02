@@ -22,9 +22,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "palettes.h"
 #include "twinkleFox.h"
-#include "map.h"
 
 void rainbow()
 {
@@ -349,25 +347,28 @@ PatternAndNameList patterns = {
 
   { fibonacciStars,      "Fibonacci Stars" },
 
-  { colorWaves,          "Color Waves" },
-  { pride,               "Pride" },
+  { paletteNoise, "Noise" },
+  { polarNoise, "Polar Noise" }
 
-  // TwinkleFOX patterns
-  { drawTwinkles, "Twinkles" },
+  // { colorWaves,          "Color Waves" },
+  // { pride,               "Pride" },
 
-  // Fire & Water
-  { fire, "Fire" },
-  { water, "Water" },
+  // // TwinkleFOX patterns
+  // { drawTwinkles, "Twinkles" },
 
-  // DemoReel100 patterns
-  { rainbow, "Rainbow" },
-  { rainbowWithGlitter, "Rainbow With Glitter" },
-  { confetti, "Confetti" },
-  { sinelon, "Sinelon" },
-  { juggle, "Juggle" },
-  { bpm, "BPM" },
+  // // Fire & Water
+  // { fire, "Fire" },
+  // { water, "Water" },
 
-  { showSolidColor, "Solid Color" },
+  // // DemoReel100 patterns
+  // { rainbow, "Rainbow" },
+  // { rainbowWithGlitter, "Rainbow With Glitter" },
+  // { confetti, "Confetti" },
+  // { sinelon, "Sinelon" },
+  // { juggle, "Juggle" },
+  // { bpm, "BPM" },
+
+  // { showSolidColor, "Solid Color" },
 };
 
 const uint8_t patternCount = ARRAY_SIZE(patterns);
