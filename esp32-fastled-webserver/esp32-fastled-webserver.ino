@@ -30,6 +30,7 @@
 #include <EEPROM.h>
 #include <HTTPUpdateServer.h>
 #include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager
+#include <ESPmDNS.h>
 
 #if defined(FASTLED_VERSION) && (FASTLED_VERSION < 3003000)
 #warning "Requires FastLED 3.3 or later; check github for latest code."
@@ -55,7 +56,7 @@ uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 uint8_t power = 1;
 uint8_t brightness = 8;
 
-uint8_t speed = 30;
+uint8_t speed = 16;
 
 // COOLING: How much does the air cool as it rises?
 // Less cooling = taller flames.  More cooling = shorter flames.

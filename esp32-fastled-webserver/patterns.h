@@ -159,19 +159,25 @@ void fillWithPride(bool useFibonacciOrder)
   static uint16_t sLastMillis = 0;
   static uint16_t sHue16 = 0;
 
-  uint8_t sat8 = beatsin88( 87, 220, 250);
-  uint8_t brightdepth = beatsin88( 341, 96, 224);
-  uint16_t brightnessthetainc16 = beatsin88( 203, (25 * 256), (40 * 256));
-  uint8_t msmultiplier = beatsin88(147, 23, 60);
+  // uint8_t sat8 = beatsin88( 87, 220, 250);
+  uint8_t sat8 = beatsin88( 43.5, 220, 250);
+  // uint8_t brightdepth = beatsin88( 341, 96, 224);
+  uint8_t brightdepth = beatsin88(171, 96, 224);
+  // uint16_t brightnessthetainc16 = beatsin88( 203, (25 * 256), (40 * 256));
+  uint16_t brightnessthetainc16 = beatsin88( 102, (25 * 256), (40 * 256));
+  // uint8_t msmultiplier = beatsin88(147, 23, 60);
+  uint8_t msmultiplier = beatsin88(74, 23, 60);
 
   uint16_t hue16 = sHue16;//gHue * 256;
-  uint16_t hueinc16 = beatsin88(113, 1, 3000);
+  // uint16_t hueinc16 = beatsin88(113, 1, 3000);
+  uint16_t hueinc16 = beatsin88(57, 1, 128);
 
   uint16_t ms = millis();
   uint16_t deltams = ms - sLastMillis ;
   sLastMillis  = ms;
   sPseudotime += deltams * msmultiplier;
-  sHue16 += deltams * beatsin88( 400, 5, 9);
+  // sHue16 += deltams * beatsin88( 400, 5, 9);
+  sHue16 += deltams * beatsin88( 200, 5, 9);
   uint16_t brightnesstheta16 = sPseudotime;
 
   for ( uint16_t i = 0 ; i < NUM_LEDS; i++) {
@@ -189,7 +195,8 @@ void fillWithPride(bool useFibonacciOrder)
 
     uint16_t pixelnumber = useFibonacciOrder ? fibonacciToPhysical[i] : i;
 
-    nblend( leds[pixelnumber], newcolor, 64);
+    // nblend( leds[pixelnumber], newcolor, 64);
+    nblend( leds[pixelnumber], newcolor, 8);
   }
 }
 
@@ -211,18 +218,23 @@ void colorwaves( CRGB* ledarray, uint16_t numleds, CRGBPalette16& palette, bool 
   static uint16_t sHue16 = 0;
 
   // uint8_t sat8 = beatsin88( 87, 220, 250);
-  uint8_t brightdepth = beatsin88( 341, 96, 224);
-  uint16_t brightnessthetainc16 = beatsin88( 203, (25 * 256), (40 * 256));
-  uint8_t msmultiplier = beatsin88(147, 23, 60);
+  // uint8_t brightdepth = beatsin88( 341, 96, 224);
+  uint8_t brightdepth = beatsin88(171, 96, 224);
+  // uint16_t brightnessthetainc16 = beatsin88( 203, (25 * 256), (40 * 256));
+  uint16_t brightnessthetainc16 = beatsin88( 102, (25 * 256), (40 * 256));
+  // uint8_t msmultiplier = beatsin88(147, 23, 60);
+  uint8_t msmultiplier = beatsin88(74, 23, 60);
 
   uint16_t hue16 = sHue16;//gHue * 256;
-  uint16_t hueinc16 = beatsin88(113, 300, 1500);
+  // uint16_t hueinc16 = beatsin88(113, 300, 1500);
+  uint16_t hueinc16 = beatsin88(57, 1, 128);
 
   uint16_t ms = millis();
   uint16_t deltams = ms - sLastMillis ;
   sLastMillis  = ms;
   sPseudotime += deltams * msmultiplier;
-  sHue16 += deltams * beatsin88( 400, 5, 9);
+  // sHue16 += deltams * beatsin88( 400, 5, 9);
+  sHue16 += deltams * beatsin88( 200, 5, 9);
   uint16_t brightnesstheta16 = sPseudotime;
 
   for ( uint16_t i = 0 ; i < numleds; i++) {
@@ -250,7 +262,7 @@ void colorwaves( CRGB* ledarray, uint16_t numleds, CRGBPalette16& palette, bool 
 
     uint16_t pixelnumber = useFibonacciOrder ? fibonacciToPhysical[i] : i;
 
-    nblend( ledarray[pixelnumber], newcolor, 128);
+    nblend( ledarray[pixelnumber], newcolor, 8);
   }
 }
 
@@ -278,7 +290,9 @@ void fibonacciStarsWithOffset(uint16_t stars[], uint8_t starCount, uint8_t offse
     uint16_t index = fibonacciToPhysical[stars[i]];
 
     // draw the star
-    leds[index] = ColorFromPalette(currentPalette, (stars[i] / hues) + gHue); // i * (240 / starCount)
+    CRGB newcolor = ColorFromPalette(currentPalette, (stars[i] / hues) + gHue); // i * (240 / starCount)
+
+    nblend( leds[index], newcolor, 64);
   }
 
   // move the stars
@@ -321,7 +335,7 @@ void fibonacciStars() {
   static bool setup = true;
   fadeToBlackBy( leds, NUM_LEDS, 8);
 
-  EVERY_N_MILLIS(60) {
+  EVERY_N_MILLIS(90) {
     move = true;
   }
 
@@ -333,6 +347,117 @@ void fibonacciStars() {
   setup = false;
 }
 
+void fireFibonacci() {
+  for (uint16_t i = 0; i < NUM_LEDS; i++) {
+    uint16_t x = coordsX[i];
+    uint16_t y = coordsY[i];
+
+    uint8_t n = qsub8(inoise8((y << 2) - beat88(speed << 2), (x << 2)), y);
+
+    leds[i] = ColorFromPalette(HeatColors_p, n);
+  }
+}
+
+void waterFibonacci() {
+  for (uint16_t i = 0; i < NUM_LEDS; i++) {
+    uint16_t x = coordsX[i];
+    uint16_t y = coordsY[i];
+
+    uint8_t n = inoise8((y << 2) + beat88(speed << 2), (x << 4));
+
+    leds[i] = ColorFromPalette(IceColors_p, n);
+  }
+}
+
+void firePalette() {
+  for (uint16_t i = 0; i < NUM_LEDS; i++) {
+    uint16_t x = coordsX[i];
+    uint16_t y = coordsY[i];
+
+    uint8_t n = qsub8(inoise8((y << 2) - beat88(speed << 2), (x << 2)), y);
+
+    leds[i] = ColorFromPalette(currentPalette, n);
+  }
+}
+
+void waterPalette() {
+  for (uint16_t i = 0; i < NUM_LEDS; i++) {
+    uint16_t x = coordsX[i];
+    uint16_t y = coordsY[i];
+
+    uint8_t n = inoise8((y << 2) + beat88(speed << 2), (x << 4));
+
+    leds[i] = ColorFromPalette(currentPalette, n);
+  }
+}
+
+void emitterFibonacci() {
+  static CRGB ledBuffer[NUM_LEDS]; // buffer for better fade behavior
+  const uint8_t dAngle = 32; // angular span of the traces
+  const uint8_t dRadius = 12; // radial width of the traces
+  const uint8_t vSpeed = 16; // max speed variation
+
+
+  static const uint8_t eCount = 7; // Number of simultanious traces
+  static uint8_t angle[eCount]; // individual trace angles
+  static uint16_t timeOffset[eCount]; // individual offsets from beat8() function
+  static uint8_t speedOffset[eCount]; // individual speed offsets limited by vSpeed
+  static uint8_t sparkIdx = 0; // randomizer cycles through traces to spark new ones
+
+  // spark new trace
+  EVERY_N_MILLIS(20) {
+    if (random8(17) <= (speed >> 4)) { // increase change rate for higher speeds
+      angle[sparkIdx] = random8();
+      speedOffset[sparkIdx] = random8(vSpeed); // individual speed variation
+      timeOffset[sparkIdx] = beat8(qadd8(speed,speedOffset[sparkIdx]));
+      sparkIdx = addmod8(sparkIdx, 1, eCount); // continue randomizer at next spark
+    }
+  }
+
+  // fade traces
+  fadeToBlackBy( ledBuffer, NUM_LEDS, 6 + (speed >> 3));
+
+  // draw traces
+  for (uint8_t e = 0; e < eCount; e++) {
+    uint8_t startRadius = sub8(beat8(qadd8(speed, speedOffset[e])), timeOffset[e]);
+    uint8_t endRadius = add8(startRadius, dRadius + (speed>>5)); // increase radial width for higher speeds
+    antialiasPixelAR(angle[e], dAngle, startRadius, endRadius, ColorFromPalette(currentPalette, startRadius), ledBuffer, NUM_LEDS);
+  }
+
+  // copy buffer to actual strip
+  memcpy(leds, ledBuffer, sizeof(ledBuffer[0])*NUM_LEDS);
+}
+
+CRGBPalette16 swirlPalette(palettes[1]); // es_rivendell_15_gp
+
+void swirlFibonacci() {
+  const float z = 2.5; // zoom (2.0)
+  const float w = 3.0; // number of wings (3)
+  const float p_min = 0.1; const float p_max = 2.0; // puff up (default: 1.0)
+  const float d_min = 0.1; const float d_max = 2.0; // dent (default: 0.5)
+  const float s_min = -3.0; const float s_max = 2.0; // swirl (default: -2.0)
+  const float g_min = 0.1; const float g_max = 0.5; // glow (default: 0.2)
+  const float b = 240; // inverse brightness (240)
+
+  const float p = p_min + beatsin88(13*speed) / (float)UINT16_MAX * (p_max - p_min);
+  const float d = d_min + beatsin88(17*speed) / (float)UINT16_MAX * (d_max - d_min);
+  const float s = s_min + beatsin88(7*speed) / (float)UINT16_MAX * (s_max - s_min);
+  const float g = g_min + beatsin88(27*speed) / (float)UINT16_MAX * (g_max - g_min);
+
+
+  for (uint16_t i = 0; i < NUM_LEDS; i++) {
+    float r = physicalToFibonacci[i] / 256.0 * z;
+    float a = (angles[i] + (beat88(3*speed)>>3)) / 256.0 * TWO_PI;
+    float v = r - p + d * sin(w * a + s * r * r);
+    float c = 255 - b * pow(fabs(v), g);
+    if (c < 0) c = 0;
+    else if (c > 255) c = 255;
+
+    CRGB newcolor = ColorFromPalette(swirlPalette, (uint8_t)c);
+    nblend(leds[i], newcolor, 128);
+  }
+}
+
 typedef void (*Pattern)();
 typedef Pattern PatternList[];
 typedef struct {
@@ -342,13 +467,23 @@ typedef struct {
 typedef PatternAndName PatternAndNameList[];
 
 PatternAndNameList patterns = {
-  { colorWavesFibonacci, "Color Waves Fibonacci" },
-  { prideFibonacci,      "Pride Fibonacci" },
+  { colorWavesFibonacci, "Color Palette Waves" },
+  { prideFibonacci, "Rainbow Waves" },
 
-  { fibonacciStars,      "Fibonacci Stars" },
 
-  { paletteNoise, "Noise" },
-  { polarNoise, "Polar Noise" }
+  { paletteNoise, "Palette Noise" },
+  { polarNoise, "Polar Palette Noise" },
+
+  { fireFibonacci, "Fire" },
+  { waterFibonacci, "Water" },
+
+  { firePalette, "Palette Fire" },
+  { waterPalette, "Palette Water" },
+
+  { fibonacciStars, "Palette Stars" },
+  { emitterFibonacci, "Palette Emitters" },
+
+  { swirlFibonacci, "Swirl" },
 
   // { colorWaves,          "Color Waves" },
   // { pride,               "Pride" },

@@ -74,6 +74,8 @@ void setupWeb() {
     Serial.println("Wi-Fi manager portal running");
   }
 
+  webServer.enableCORS();
+  
   webServer.on("/all", HTTP_GET, []() {
     digitalWrite(led, 0);
     String json = getFieldsJson(fields, fieldCount);
@@ -104,6 +106,8 @@ void setupWeb() {
   webServer.serveStatic("/css/styles.css", SPIFFS, "/css/styles.css", "max-age=86400");
   webServer.serveStatic("/js/app.js", SPIFFS, "/js/app.js", "max-age=86400");
   webServer.serveStatic("/images/atom196.png", SPIFFS, "/images/atom196.png", "max-age=86400");
+
+  MDNS.begin("fibonacci1024");
 
   httpUpdateServer.setup(&webServer);
   webServer.begin();
