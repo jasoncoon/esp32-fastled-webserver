@@ -134,8 +134,8 @@ void setup() {
   pinMode(led, OUTPUT);
   digitalWrite(led, 1);
 
-  delay(3000); // 3 second delay for recovery
-  Serial.begin(115200);
+  // delay(3000); // 3 second delay for recovery
+  Serial.begin(9600);
 
   SPIFFS.begin();
   listDir(SPIFFS, "/", 1);
@@ -144,11 +144,11 @@ void setup() {
 
   setupWeb();
 
-  FastLED.addLeds<LED_TYPE, 16, COLOR_ORDER>(leds, 0 * 205, 205);
-  FastLED.addLeds<LED_TYPE,  3, COLOR_ORDER>(leds, 1 * 205, 205);
-  FastLED.addLeds<LED_TYPE,  1, COLOR_ORDER>(leds, 2 * 205, 205);
-  FastLED.addLeds<LED_TYPE,  4, COLOR_ORDER>(leds, 3 * 205, 205);
-  FastLED.addLeds<LED_TYPE, 15, COLOR_ORDER>(leds, 4 * 205, 204);
+  FastLED.addLeds<LED_TYPE, 16, COLOR_ORDER>(leds, 0 * 205, 205); // LED1 on QuinLED-Dig-Quad
+  FastLED.addLeds<LED_TYPE,  3, COLOR_ORDER>(leds, 1 * 205, 205); // LED2
+  FastLED.addLeds<LED_TYPE,  1, COLOR_ORDER>(leds, 2 * 205, 205); // LED3
+  FastLED.addLeds<LED_TYPE,  4, COLOR_ORDER>(leds, 3 * 205, 205); // LED4
+  FastLED.addLeds<LED_TYPE, 15, COLOR_ORDER>(leds, 4 * 205, 204); // Q1R
 
   // FastLED.setDither(BINARY_DITHER);
   FastLED.setDither(DISABLE_DITHER);
