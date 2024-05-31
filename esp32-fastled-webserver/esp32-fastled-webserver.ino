@@ -69,16 +69,16 @@ unsigned long paletteTimeout = 0;
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
-#define DATA_PIN    18
+#define DATA_PIN    MOSI
 //#define CLK_PIN   4
-#define LED_TYPE    SK6812
+#define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
 #define NUM_STRIPS  1
-#define NUM_LEDS_PER_STRIP 64
+#define NUM_LEDS_PER_STRIP 128
 #define NUM_LEDS NUM_LEDS_PER_STRIP * NUM_STRIPS
 CRGB leds[NUM_LEDS];
 
-#define MILLI_AMPS         1600 // IMPORTANT: set the max milli-Amps of your power supply (4A = 4000mA)
+#define MILLI_AMPS         800 // IMPORTANT: set the max milli-Amps of your power supply (4A = 4000mA)
 #define FRAMES_PER_SECOND  120
 
 #include "patterns.h"
@@ -130,7 +130,7 @@ void setup() {
   pinMode(led, OUTPUT);
   digitalWrite(led, 1);
 
-  //  delay(3000); // 3 second delay for recovery
+  delay(3000); // 3 second delay for recovery
   Serial.begin(115200);
 
   SPIFFS.begin();
